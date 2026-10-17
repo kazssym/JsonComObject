@@ -1,0 +1,18 @@
+// JsonComObject.idl : IDL source for JsonComObject
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (JsonComObject.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	uuid(e1603bed-3cf1-47a1-9645-c4b29bfb464f),
+	version(1.0),
+]
+library JsonComObjectLib
+{
+	importlib("stdole2.tlb");
+};
+
