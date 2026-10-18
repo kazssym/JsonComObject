@@ -1,4 +1,4 @@
-// JsonComObjectModule.ixx - main module interface 
+// JsonComObject.Module.ixx - main module interface 
 // Copyright © 2026 Kaz Nishimura
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
