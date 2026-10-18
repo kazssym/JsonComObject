@@ -109,10 +109,9 @@
       <InterfaceIdentifierFileName>JsonComObject_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>JsonComObject_p.c</ProxyFileName>
       <GenerateStublessProxies>true</GenerateStublessProxies>
-      <TypeLibraryName>$(IntDir)JsonComObject.tlb</TypeLibraryName>
+      <TypeLibraryName>JsonComObject.tlb</TypeLibraryName>
       <DllDataFileName />
       <ValidateAllParameters>true</ValidateAllParameters>
-      <OutputDirectory>$(OutDir)Generated Files\</OutputDirectory>
     </Midl>
     <ResourceCompile>
       <Culture>0x0409</Culture>
@@ -145,10 +144,9 @@
       <InterfaceIdentifierFileName>JsonComObject_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>JsonComObject_p.c</ProxyFileName>
       <GenerateStublessProxies>true</GenerateStublessProxies>
-      <TypeLibraryName>$(IntDir)JsonComObject.tlb</TypeLibraryName>
+      <TypeLibraryName>JsonComObject.tlb</TypeLibraryName>
       <DllDataFileName />
       <ValidateAllParameters>true</ValidateAllParameters>
-      <OutputDirectory>$(OutDir)Generated Files\</OutputDirectory>
     </Midl>
     <ResourceCompile>
       <Culture>0x0409</Culture>
@@ -182,10 +180,9 @@
       <InterfaceIdentifierFileName>JsonComObject_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>JsonComObject_p.c</ProxyFileName>
       <GenerateStublessProxies>true</GenerateStublessProxies>
-      <TypeLibraryName>$(IntDir)JsonComObject.tlb</TypeLibraryName>
+      <TypeLibraryName>JsonComObject.tlb</TypeLibraryName>
       <DllDataFileName />
       <ValidateAllParameters>true</ValidateAllParameters>
-      <OutputDirectory>$(OutDir)Generated Files\</OutputDirectory>
     </Midl>
     <ResourceCompile>
       <Culture>0x0409</Culture>
@@ -217,10 +214,9 @@
       <InterfaceIdentifierFileName>JsonComObject_i.c</InterfaceIdentifierFileName>
       <ProxyFileName>JsonComObject_p.c</ProxyFileName>
       <GenerateStublessProxies>true</GenerateStublessProxies>
-      <TypeLibraryName>$(IntDir)JsonComObject.tlb</TypeLibraryName>
+      <TypeLibraryName>JsonComObject.tlb</TypeLibraryName>
       <DllDataFileName />
       <ValidateAllParameters>true</ValidateAllParameters>
-      <OutputDirectory>$(OutDir)Generated Files\</OutputDirectory>
     </Midl>
     <ResourceCompile>
       <Culture>0x0409</Culture>
