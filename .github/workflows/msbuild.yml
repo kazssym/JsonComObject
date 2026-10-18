@@ -32,12 +32,12 @@ jobs:
     runs-on: windows-2025
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     - name: Add MSBuild to PATH
-      uses: microsoft/setup-msbuild@v2
+      uses: microsoft/setup-msbuild@v3
 
-    - uses: actions/cache@v4
+    - uses: actions/cache@v6
       with:
         key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
         path: ${{ env.NUGET_PACKAGES }}
@@ -47,6 +47,10 @@ jobs:
     - name: Integrate Vcpkg
       working-directory: ${{ env.GITHUB_WORKSPACE }}
       run: vcpkg integrate install
+                
+    - name: Update Vcpkg baseline
+      working-directory: ${{ env.GITHUB_WORKSPACE }}
+      run: vcpkg x-update-baseline
 
     - name: Restore NuGet packages
       working-directory: ${{ env.GITHUB_WORKSPACE }}
