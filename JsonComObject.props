@@ -12,6 +12,9 @@
       <ConformanceMode>true</ConformanceMode>
       <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
     </ClCompile>
+    <Midl>
+      <OutputDirectory>$(OutDir)Generated Files\</OutputDirectory>
+    </Midl>
   </ItemDefinitionGroup>
   <ItemGroup />
 </Project>
