@@ -1,1 +1,7 @@
-<Solution />
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="JsonComObject/JsonComObject.vcxproj" />
+</Solution>
