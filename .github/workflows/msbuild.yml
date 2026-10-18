@@ -47,6 +47,10 @@ jobs:
     - name: Integrate Vcpkg
       working-directory: ${{ env.GITHUB_WORKSPACE }}
       run: vcpkg integrate install
+                
+    - name: Update Vcpkg baselines
+      working-directory: ${{ env.GITHUB_WORKSPACE }}
+      run: vcpkg x-update-baselines
 
     - name: Restore NuGet packages
       working-directory: ${{ env.GITHUB_WORKSPACE }}
