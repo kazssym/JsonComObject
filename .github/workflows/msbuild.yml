@@ -48,10 +48,10 @@ jobs:
 
     - uses: actions/cache@v6
       with:
-        key: vcpkg-binary-cache-${{ hashFiles('**/vcpkg.json', '**/vcpkg-configuration.json') }}
+        key: ${{ runner.os }}-vcpkg-binary-cache-${{ hashFiles('**/vcpkg.json', '**/vcpkg-configuration.json') }}
         path: ${{ github.workspace }}/.vcpkg/binary-cache
         restore-keys: |
-          vcpkg-binary-cache-
+          ${{ runner.os }}-vcpkg-binary-cache-
 
     - name: Integrate Vcpkg
       working-directory: ${{ env.GITHUB_WORKSPACE }}
