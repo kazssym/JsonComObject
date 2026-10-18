@@ -24,6 +24,8 @@ env:
   # Path to the NuGet global-packages folder.
   NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
 
+  VCPKG_BINARY_SOURCES: files,${{ github.workspace }}/.vcpkg/binary-cache,readwrite
+
 permissions:
   contents: read
 
@@ -43,7 +45,14 @@ jobs:
         path: ${{ env.NUGET_PACKAGES }}
         restore-keys: |
           ${{ runner.os }}-nuget-
-                
+
+    - uses: actions/cache@v6
+      with:
+        key: vcpkg-binary-cache-${{ hashFiles('**/vcpkg.json,**/vcpkg-configuration.json') }}
+        path: ${{ env.GITHUB_WORKSPACE }}/.vcpkg/binary-cache
+        restore-keys: |
+          vcpkg-binary-cache-
+
     - name: Integrate Vcpkg
       working-directory: ${{ env.GITHUB_WORKSPACE }}
       run: vcpkg integrate install
