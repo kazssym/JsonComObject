@@ -42,10 +42,10 @@
     <ClCompile Include="dllmain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="JsonComObject_i.c">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
     <ClCompile Include="pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonComObject.iid.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
