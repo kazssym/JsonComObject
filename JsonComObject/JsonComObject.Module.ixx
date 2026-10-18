@@ -25,4 +25,25 @@ module;
 
 #include "pch.h"
 
+#include "dllmain.h"
+#include <atlbase.h>
+#include <atlcom.h>
+#include <combaseapi.h>
+
+using namespace ATL;
+
+
 export module JsonComObject;
+
+export CJsonComObjectModule _AtlModule;
+
+_Check_return_
+export STDAPI DllGetClassObject(_In_ REFCLSID rclsid, _In_ REFIID riid, _Outptr_ LPVOID *ppv)
+{
+    return _AtlModule.DllGetClassObject(rclsid, riid, ppv);
+}
+
+export STDAPI DllCanUnloadNow()
+{
+    return _AtlModule.DllCanUnloadNow();
+}
