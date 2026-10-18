@@ -24,7 +24,7 @@ env:
   # Path to the NuGet global-packages folder.
   NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
 
-  VCPKG_BINARY_SOURCES: files,${{ github.workspace }}/.vcpkg/binary-cache,readwrite
+  VCPKG_BINARY_SOURCES: clear;files,${{ github.workspace }}/.vcpkg/binary-cache,readwrite
 
 permissions:
   contents: read
