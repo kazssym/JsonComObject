@@ -48,7 +48,7 @@ jobs:
 
     - uses: actions/cache@v6
       with:
-        key: vcpkg-binary-cache-${{ hashFiles('**/vcpkg.json,**/vcpkg-configuration.json') }}
+        key: vcpkg-binary-cache-${{ hashFiles('**/vcpkg.json', '**/vcpkg-configuration.json') }}
         path: ${{ env.GITHUB_WORKSPACE }}/.vcpkg/binary-cache
         restore-keys: |
           vcpkg-binary-cache-
