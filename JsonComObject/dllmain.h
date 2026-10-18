@@ -1,5 +1,7 @@
 // dllmain.h : Declaration of module class.
 
+#include "JsonComObject_i.h"
+
 class CJsonComObjectModule : public ATL::CAtlDllModuleT< CJsonComObjectModule >
 {
 public :
