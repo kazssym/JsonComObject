@@ -25,17 +25,32 @@ module;
 
 #include "pch.h"
 
-#include "dllmain.h"
+#include "JsonComObject_i.h"
+#include "resource.h"
 #include <atlbase.h>
 #include <atlcom.h>
 #include <combaseapi.h>
 
-using namespace ATL;
-
 
 export module JsonComObject;
 
+using namespace ATL;
+
+namespace JsonComObject
+{
+
+class CJsonComObjectModule : public CAtlDllModuleT<CJsonComObjectModule>
+{
+public:
+    DECLARE_LIBID(LIBID_JsonComObjectLib)
+    DECLARE_REGISTRY_APPID_RESOURCEID(IDR_JSONCOMOBJECT, "{E1603BED-3CF1-47A1-9645-C4B29BFB464F}")
+};
+
 export CJsonComObjectModule _AtlModule;
+
+} // namespace JsonComObject
+
+using JsonComObject::_AtlModule;
 
 _Check_return_
 export STDAPI DllGetClassObject(_In_ REFCLSID rclsid, _In_ REFIID riid, _Outptr_ LPVOID *ppv)

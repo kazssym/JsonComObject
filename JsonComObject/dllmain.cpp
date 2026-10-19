@@ -6,7 +6,9 @@
 #include "JsonComObject_i.h"
 #include "dllmain.h"
 
-CJsonComObjectModule _AtlModule;
+import JsonComObject;
+
+using JsonComObject::_AtlModule;
 
 // DLL Entry Point
 extern "C" BOOL WINAPI DllMain(HINSTANCE hInstance, DWORD dwReason, LPVOID lpReserved)

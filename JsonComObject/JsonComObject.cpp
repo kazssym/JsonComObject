@@ -8,9 +8,10 @@
 #include "dllmain.h"
 
 
-using namespace ATL;
-
 import JsonComObject;
+
+using JsonComObject::_AtlModule;
+using namespace ATL;
 
 
 // DllRegisterServer - Adds entries to the system registry.
