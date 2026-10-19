@@ -27,9 +27,11 @@ module;
 
 #include "JsonComObject_i.h"
 #include "resource.h"
+#include <Shlwapi.h>
 #include <atlbase.h>
 #include <atlcom.h>
 #include <combaseapi.h>
+#include <olectl.h>
 
 
 export module JsonComObject;
@@ -46,9 +48,9 @@ public:
     DECLARE_REGISTRY_APPID_RESOURCEID(IDR_JSONCOMOBJECT, "{E1603BED-3CF1-47A1-9645-C4B29BFB464F}")
 };
 
-export CJsonComObjectModule _AtlModule;
+export CJsonComObjectModule _AtlModule;  // NOSONAR
 
-} // namespace JsonComObject
+}  // namespace JsonComObject
 
 using JsonComObject::_AtlModule;
 
@@ -61,4 +63,14 @@ export STDAPI DllGetClassObject(_In_ REFCLSID rclsid, _In_ REFIID riid, _Outptr_
 export STDAPI DllCanUnloadNow()
 {
     return _AtlModule.DllCanUnloadNow();
+}
+
+export STDAPI DllRegisterServer(void)
+{
+    return _AtlModule.DllRegisterServer();
+}
+
+export STDAPI DllUnregisterServer(void)
+{
+    return _AtlModule.DllUnregisterServer();
 }

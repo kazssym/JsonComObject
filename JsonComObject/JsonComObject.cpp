@@ -14,23 +14,6 @@ using JsonComObject::_AtlModule;
 using namespace ATL;
 
 
-// DllRegisterServer - Adds entries to the system registry.
-_Use_decl_annotations_
-STDAPI DllRegisterServer(void)
-{
-	// registers object, typelib and all interfaces in typelib
-	HRESULT hr = _AtlModule.DllRegisterServer();
-	return hr;
-}
-
-// DllUnregisterServer - Removes entries from the system registry.
-_Use_decl_annotations_
-STDAPI DllUnregisterServer(void)
-{
-	HRESULT hr = _AtlModule.DllUnregisterServer();
-	return hr;
-}
-
 // DllInstall - Adds/Removes entries to the system registry per user per machine.
 STDAPI DllInstall(BOOL bInstall, _In_opt_  LPCWSTR pszCmdLine)
 {
