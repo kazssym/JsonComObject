@@ -1,47 +1,76 @@
-// JsonComObject.cpp : Implementation of DLL Exports.
+// JsonComObject.Module.ixx - main module interface 
+// Copyright © 2026 Kaz Nishimura
 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files(the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and /or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions :
+//
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//
+// SPDX-License-Identifier: MIT
+
+module;
 
 #include "pch.h"
-#include "framework.h"
-#include "resource.h"
+
 #include "JsonComObject_i.h"
-#include "dllmain.h"
+#include "resource.h"
+#include <Shlwapi.h>
+#include <atlbase.h>
+#include <atlcom.h>
+#include <combaseapi.h>
+#include <olectl.h>
 
 
-import JsonComObject;
+export module JsonComObject;
 
-using JsonComObject::_AtlModule;
 using namespace ATL;
 
-
-// DllInstall - Adds/Removes entries to the system registry per user per machine.
-STDAPI DllInstall(BOOL bInstall, _In_opt_  LPCWSTR pszCmdLine)
+namespace JsonComObject
 {
-	HRESULT hr = E_FAIL;
-	static const wchar_t szUserSwitch[] = L"user";
 
-	if (pszCmdLine != nullptr)
-	{
-		if (_wcsnicmp(pszCmdLine, szUserSwitch, _countof(szUserSwitch)) == 0)
-		{
-			ATL::AtlSetPerUserRegistration(true);
-		}
-	}
+class CJsonComObjectModule : public CAtlDllModuleT<CJsonComObjectModule>
+{
+public:
+    DECLARE_LIBID(LIBID_JsonComObjectLib)
+    DECLARE_REGISTRY_APPID_RESOURCEID(IDR_JSONCOMOBJECT, "{E1603BED-3CF1-47A1-9645-C4B29BFB464F}")
+};
 
-	if (bInstall)
-	{
-		hr = DllRegisterServer();
-		if (FAILED(hr))
-		{
-			DllUnregisterServer();
-		}
-	}
-	else
-	{
-		hr = DllUnregisterServer();
-	}
+export CJsonComObjectModule _AtlModule;  // NOSONAR
 
-	return hr;
+}  // namespace JsonComObject
+
+using JsonComObject::_AtlModule;
+
+_Check_return_
+export STDAPI DllGetClassObject(_In_ REFCLSID rclsid, _In_ REFIID riid, _Outptr_ LPVOID *ppv)
+{
+    return _AtlModule.DllGetClassObject(rclsid, riid, ppv);
 }
 
+export STDAPI DllCanUnloadNow()
+{
+    return _AtlModule.DllCanUnloadNow();
+}
 
+export STDAPI DllRegisterServer(void)
+{
+    return _AtlModule.DllRegisterServer();
+}
+
+export STDAPI DllUnregisterServer(void)
+{
+    return _AtlModule.DllUnregisterServer();
+}
