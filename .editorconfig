@@ -7,7 +7,7 @@ end_of_line = lf
 charset = utf-8
 insert_final_newline = true
 
-[*.{xml,props,targets,slnx,vcxproj,filters}]
+[*.{xml,manifest,props,targets,slnx,vcxproj,filters}]
 indent_style = space
 indent_size = 2
 end_of_line = crlf
