@@ -281,6 +281,9 @@
   <ItemGroup>
     <Midl Include="JsonComObject.idl" />
   </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="JsonComObject.manifest" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
