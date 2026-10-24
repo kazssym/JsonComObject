@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
-  <assemblyIdentity type="win32" name="KazNishimura.JsonComObject" version="1.0.0.0"/>
+  <assemblyIdentity type="win32" name="JsonComObject" version="1.0.0.0"/>
   <file name="JsonComObject.dll">
     <typelib tlbid="{E1603BED-3CF1-47A1-9645-C4B29BFB464F}" version="1.0" helpdir=""/>
   </file>
