@@ -8,7 +8,7 @@ import "oaidl.idl";
 import "ocidl.idl";
 
 [
-	uuid(e1603bed-3cf1-47a1-9645-c4b29bfb464f),
+	uuid(E1603BED-3CF1-47A1-9645-C4B29BFB464F),
 	version(1.0),
 ]
 library JsonComObjectLib
