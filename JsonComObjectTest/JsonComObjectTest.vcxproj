@@ -159,15 +159,6 @@
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Manifest Include="JsonComObjectTest.exe.manifest" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="JsonComObjectTest.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="resource.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
