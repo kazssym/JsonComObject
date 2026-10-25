@@ -1,10 +1,10 @@
 // dllmain.cpp : Implementation of DllMain.
 
 #include "pch.h"
+
 #include "framework.h"
 #include "resource.h"
 #include "JsonComObject_i.h"
-#include "dllmain.h"
 
 import JsonComObject;
 
