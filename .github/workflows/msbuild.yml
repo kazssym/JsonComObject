@@ -74,6 +74,10 @@ jobs:
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
       run: |
         msbuild /m /p:Platform=x64 /p:Configuration=${{ env.BUILD_CONFIGURATION }} ${{ env.SOLUTION_FILE_PATH }}
+           
+    - uses: actions/upload-artifact@v7
+      with:
+        path: ${{ github.workspace }}/x64/${{ env.BUILD_CONFIGURATION }}
 
     - name: Run tests
       working-directory: ${{ github.workspace }}/x64/${{ env.BUILD_CONFIGURATION }}
