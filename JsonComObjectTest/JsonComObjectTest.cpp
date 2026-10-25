@@ -30,6 +30,8 @@ extern "C"
 #include <JsonComObject_i.c>  // For static GUID linkage
 }
 
+#pragma comment(linker, R"(/manifestdependency:"type='win32' name='JsonComObject' version='1.0.0.0'")")
+
 
 namespace JsonComObject
 {
