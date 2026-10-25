@@ -18,6 +18,9 @@
     <ClCompile Include="JsonComObjectTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TypeLibTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="JsonComObjectTest.exe.manifest" />
