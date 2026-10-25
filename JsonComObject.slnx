@@ -4,4 +4,5 @@
     <Platform Name="x86" />
   </Configurations>
   <Project Path="JsonComObject/JsonComObject.vcxproj" />
+  <Project Path="JsonComObjectTest/JsonComObjectTest.vcxproj" Id="9da4edc5-c599-4612-bd49-134c592e9702" />
 </Solution>
