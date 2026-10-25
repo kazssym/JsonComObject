@@ -2,6 +2,8 @@
   "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "builtin-baseline": "2750401336fb7c95f6619657a46a7e798661341c",
   "dependencies": [
-    "boost-test"
+    "boost-test",
+    "ms-gsl",
+    "wil"
   ]
 }
