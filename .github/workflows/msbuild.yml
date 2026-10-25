@@ -78,4 +78,5 @@ jobs:
     - name: Run tests
       working-directory: ${{ github.workspace }}/x64/${{ env.BUILD_CONFIGURATION }}
       run: |
+        ls
         ./JsonComObjectTest
