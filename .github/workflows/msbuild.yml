@@ -40,12 +40,14 @@ jobs:
       uses: microsoft/setup-msbuild@v3
 
     - name: Integrate Vcpkg
-      working-directory: ${{ env.GITHUB_WORKSPACE }}
-      run: vcpkg integrate install
+      working-directory: ${{ github.workspace }}
+      run: |
+        vcpkg integrate install
                 
     - name: Update Vcpkg baseline
-      working-directory: ${{ env.GITHUB_WORKSPACE }}
-      run: vcpkg x-update-baseline
+      working-directory: ${{ github.workspace }}
+      run: |
+        vcpkg x-update-baseline
 
     - uses: actions/cache@v6
       with:
@@ -62,11 +64,13 @@ jobs:
           ${{ runner.os }}-vcpkg-binary-cache-
 
     - name: Restore NuGet packages
-      working-directory: ${{ env.GITHUB_WORKSPACE }}
-      run: nuget restore ${{ env.SOLUTION_FILE_PATH }}
+      working-directory: ${{ github.workspace }}
+      run: |
+        nuget restore ${{ env.SOLUTION_FILE_PATH }}
 
     - name: Build
-      working-directory: ${{ env.GITHUB_WORKSPACE }}
+      working-directory: ${{ github.workspace }}
       # Add additional options to the MSBuild command line here (like platform or verbosity level).
       # See https://docs.microsoft.com/visualstudio/msbuild/msbuild-command-line-reference
-      run: msbuild /m /p:Configuration=${{ env.BUILD_CONFIGURATION }} ${{ env.SOLUTION_FILE_PATH }}
+      run: |
+        msbuild /m /p:Configuration=${{ env.BUILD_CONFIGURATION }} ${{ env.SOLUTION_FILE_PATH }}
