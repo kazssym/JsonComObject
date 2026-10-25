@@ -66,3 +66,4 @@
 *.slnx text eol=crlf
 *.*proj text eol=crlf
 *.*proj.filters text eol=crlf
+*.rc text working-tree-encoding=UTF-16LE-BOM eol=crlf

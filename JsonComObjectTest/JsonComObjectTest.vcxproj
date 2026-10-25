@@ -151,12 +151,22 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="JsonComObjectTest.cpp" />
+    <ClCompile Include="TypeLibTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\JsonComObject\JsonComObject.vcxproj">
       <Project>{0a2951df-5d54-75f8-9242-3d84dbb5af6d}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Manifest Include="JsonComObjectTest.exe.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="JsonComObjectTest.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
