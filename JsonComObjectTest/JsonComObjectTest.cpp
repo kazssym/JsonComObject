@@ -23,3 +23,33 @@
 
 #define BOOST_TEST_MODULE JsonComObjectTest
 #include <boost/test/unit_test.hpp>
+#include <wil/result_macros.h>
+
+extern "C"
+{
+#include <JsonComObject_i.c>  // For static GUID linkage
+}
+
+
+namespace JsonComObject
+{
+
+struct GlobalFixture
+{
+    GlobalFixture() noexcept = default;
+    ~GlobalFixture() noexcept = default;
+
+    void setup() const
+    {
+        THROW_IF_FAILED(CoInitializeEx(nullptr, COINIT_MULTITHREADED | COINIT_DISABLE_OLE1DDE));
+    }
+
+    void teardown() const noexcept
+    {
+        CoUninitialize();
+    }
+};
+
+BOOST_TEST_GLOBAL_FIXTURE(GlobalFixture);
+
+}  // namespace JsonComObject
