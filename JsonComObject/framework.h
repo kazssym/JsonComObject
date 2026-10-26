@@ -15,7 +15,4 @@
 
 #define ATL_NO_ASSERT_ON_DESTROY_NONEXISTENT_WINDOW
 
-#include "resource.h"
 #include <atlbase.h>
-#include <atlcom.h>
-#include <atlctl.h>
