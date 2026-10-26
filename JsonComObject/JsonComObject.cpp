@@ -27,11 +27,9 @@ module;
 
 #include "JsonComObject_i.h"
 #include "resource.h"
-#include <Shlwapi.h>
 #include <atlbase.h>
-#include <atlcom.h>
-#include <combaseapi.h>
-#include <olectl.h>
+#include <sal.h>
+#include <Windows.h>
 
 
 export module JsonComObject;
@@ -55,7 +53,7 @@ export CJsonComObjectModule _AtlModule;  // NOSONAR
 using JsonComObject::_AtlModule;
 
 _Check_return_
-export STDAPI DllGetClassObject(_In_ REFCLSID rclsid, _In_ REFIID riid, _Outptr_ LPVOID *ppv)
+export STDAPI DllGetClassObject(_In_ REFCLSID rclsid, _In_ REFIID riid, _Outptr_ LPVOID *const ppv)
 {
     return _AtlModule.DllGetClassObject(rclsid, riid, ppv);
 }
@@ -65,12 +63,12 @@ export STDAPI DllCanUnloadNow()
     return _AtlModule.DllCanUnloadNow();
 }
 
-export STDAPI DllRegisterServer(void)
+export STDAPI DllRegisterServer()
 {
     return _AtlModule.DllRegisterServer();
 }
 
-export STDAPI DllUnregisterServer(void)
+export STDAPI DllUnregisterServer()
 {
     return _AtlModule.DllUnregisterServer();
 }
