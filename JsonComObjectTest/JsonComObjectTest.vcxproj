@@ -151,6 +151,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="JsonComObjectTest.cpp" />
+    <ClCompile Include="ParserTest.cpp" />
     <ClCompile Include="TypeLibTest.cpp" />
   </ItemGroup>
   <ItemGroup>
