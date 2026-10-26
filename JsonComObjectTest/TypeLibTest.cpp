@@ -23,10 +23,11 @@
 
 #include <JsonComObject_i.h>
 #include <Windows.h>
-#include <boost/test/unit_test.hpp>
-#include <wil/result_macros.h>
 #include <atlcomcli.h>
+#include <boost/test/unit_test.hpp>
+#include <boost/test/unit_test_suite.hpp>
 #include <strsafe.h>
+#include <wil/result_macros.h>
 
 using namespace ATL;
 
