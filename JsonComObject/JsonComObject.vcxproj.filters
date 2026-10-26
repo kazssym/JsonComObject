@@ -45,6 +45,9 @@
     <ClCompile Include="JsonComObject.iid.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="JsonComObject-Parser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="JsonComObject.rc">
