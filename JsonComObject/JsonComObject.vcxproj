@@ -102,8 +102,6 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Midl>
-      <MkTypLibCompatible>false</MkTypLibCompatible>
-      <TargetEnvironment>Win32</TargetEnvironment>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <HeaderFileName>JsonComObject_i.h</HeaderFileName>
       <InterfaceIdentifierFileName>JsonComObject_i.c</InterfaceIdentifierFileName>
@@ -137,8 +135,6 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Midl>
-      <MkTypLibCompatible>false</MkTypLibCompatible>
-      <TargetEnvironment>Win32</TargetEnvironment>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <HeaderFileName>JsonComObject_i.h</HeaderFileName>
       <InterfaceIdentifierFileName>JsonComObject_i.c</InterfaceIdentifierFileName>
@@ -174,7 +170,6 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Midl>
-      <MkTypLibCompatible>false</MkTypLibCompatible>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <HeaderFileName>JsonComObject_i.h</HeaderFileName>
       <InterfaceIdentifierFileName>JsonComObject_i.c</InterfaceIdentifierFileName>
@@ -208,7 +203,6 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Midl>
-      <MkTypLibCompatible>false</MkTypLibCompatible>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <HeaderFileName>JsonComObject_i.h</HeaderFileName>
       <InterfaceIdentifierFileName>JsonComObject_i.c</InterfaceIdentifierFileName>
