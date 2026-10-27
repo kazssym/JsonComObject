@@ -45,7 +45,7 @@ struct ParserFixture
 
 BOOST_FIXTURE_TEST_CASE(ParserTest, ParserFixture)
 {
-    CComPtr<IJsonParser> parser;
+    ATL::CComPtr<IJsonParser> parser;
     const auto hr = parser.CoCreateInstance(CLSID_JsonParser, nullptr);
     BOOST_TEST(SUCCEEDED(hr));
 }
