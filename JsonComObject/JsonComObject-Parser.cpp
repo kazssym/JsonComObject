@@ -26,6 +26,7 @@ module;
 #include "pch.h"
 
 #include "JsonComObject_i.h"
+#include "resource.h"
 #include <Windows.h>
 #include <atlbase.h>
 #include <atlcom.h>
@@ -52,8 +53,10 @@ export class ATL_NO_VTABLE CJsonParser
     END_COM_MAP()
 
     DECLARE_PROTECT_FINAL_CONSTRUCT()
+    DECLARE_OBJECT_DESCRIPTION("JSON Parser Object")
+    DECLARE_REGISTRY_RESOURCEID(IDR_JSONPARSER)
 
-public:
+  public:
     CJsonParser() = default;
 
     virtual ~CJsonParser() noexcept = default;
@@ -64,5 +67,7 @@ public:
         return E_NOTIMPL;
     }
 };
+
+OBJECT_ENTRY_AUTO(CLSID_JsonParser, CJsonParser)
 
 }  // namespace JsonComObject
