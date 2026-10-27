@@ -21,8 +21,11 @@
 //
 // SPDX-License-Identifier: MIT
 
+#include <JsonComObject_i.h>
+#include <atlcomcli.h>
 #include <boost/test/unit_test.hpp>
 #include <boost/test/unit_test_suite.hpp>
+#include <strsafe.h>
 #include <wil/result_macros.h>
 
 
@@ -42,8 +45,9 @@ struct ParserFixture
 
 BOOST_FIXTURE_TEST_CASE(ParserTest, ParserFixture)
 {
-    // Test code for the parser goes here
-    BOOST_TEST(true); // Placeholder assertion
+    CComPtr<IJsonParser> parser;
+    const auto hr = parser.CoCreateInstance(CLSID_JsonParser, nullptr);
+    BOOST_TEST(SUCCEEDED(hr));
 }
 
 } // namespace JsonComObject
