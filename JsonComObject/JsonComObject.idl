@@ -28,12 +28,12 @@ import "oaidl.idl";
 import "ocidl.idl";
 
 [
-	uuid(E1603BED-3CF1-47A1-9645-C4B29BFB464F),
-	version(1.0),
+    uuid(E1603BED-3CF1-47A1-9645-C4B29BFB464F),
+    version(1.0),
 ]
 library JsonComObjectLib
 {
-	importlib("stdole2.tlb");
+    importlib("stdole2.tlb");
 
     [
         uuid(5209FCEF-4C08-4C84-8A8F-9E7D198663AA),
@@ -49,9 +49,8 @@ library JsonComObjectLib
         version(1.0), helpstring("JsonParser Class"),
     ]
     coclass JsonParser
-	{
+    {
         [default] interface IJsonParser;
-		interface IDispatch;
-	};
+        interface IDispatch;
+    };
 };
-
