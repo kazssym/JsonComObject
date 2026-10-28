@@ -275,7 +275,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="JsonComObject.def" />
-    <None Include="JsonComObject.rgs" />
+    <None Include="res\JsonComObject.rgs" />
     <None Include="res\JsonParser.rgs" />
   </ItemGroup>
   <ItemGroup>

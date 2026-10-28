@@ -55,7 +55,7 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="JsonComObject.rgs">
+    <None Include="res\JsonComObject.rgs">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="JsonComObject.def">

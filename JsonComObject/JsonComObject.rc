@@ -96,7 +96,7 @@ END
 // REGISTRY
 //
 
-IDR_JSONCOMOBJECT       REGISTRY                "JsonComObject.rgs"
+IDR_JSONCOMOBJECT       REGISTRY                "res\\JsonComObject.rgs"
 
 IDR_JSONPARSER          REGISTRY                "res\\JsonParser.rgs"
 
