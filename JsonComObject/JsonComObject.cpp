@@ -27,19 +27,19 @@ module;
 
 #include "JsonComObject_i.h"
 #include "resource.h"
+#include <Windows.h>
 #include <atlbase.h>
 #include <sal.h>
-#include <Windows.h>
 
 
 export module JsonComObject;
 
-using namespace ATL;
+export import :Parser;
 
 namespace JsonComObject
 {
 
-class CJsonComObjectModule : public CAtlDllModuleT<CJsonComObjectModule>
+class CJsonComObjectModule : public ATL::CAtlDllModuleT<CJsonComObjectModule>
 {
 public:
     DECLARE_LIBID(LIBID_JsonComObjectLib)

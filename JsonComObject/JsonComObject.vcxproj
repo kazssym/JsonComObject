@@ -102,8 +102,6 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Midl>
-      <MkTypLibCompatible>false</MkTypLibCompatible>
-      <TargetEnvironment>Win32</TargetEnvironment>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <HeaderFileName>JsonComObject_i.h</HeaderFileName>
       <InterfaceIdentifierFileName>JsonComObject_i.c</InterfaceIdentifierFileName>
@@ -137,8 +135,6 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Midl>
-      <MkTypLibCompatible>false</MkTypLibCompatible>
-      <TargetEnvironment>Win32</TargetEnvironment>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <HeaderFileName>JsonComObject_i.h</HeaderFileName>
       <InterfaceIdentifierFileName>JsonComObject_i.c</InterfaceIdentifierFileName>
@@ -174,7 +170,6 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Midl>
-      <MkTypLibCompatible>false</MkTypLibCompatible>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <HeaderFileName>JsonComObject_i.h</HeaderFileName>
       <InterfaceIdentifierFileName>JsonComObject_i.c</InterfaceIdentifierFileName>
@@ -208,7 +203,6 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Midl>
-      <MkTypLibCompatible>false</MkTypLibCompatible>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <HeaderFileName>JsonComObject_i.h</HeaderFileName>
       <InterfaceIdentifierFileName>JsonComObject_i.c</InterfaceIdentifierFileName>
@@ -251,6 +245,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="JsonComObject-Parser.cpp">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsCppModule</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsCppModule</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModule</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCppModule</CompileAs>
+    </ClCompile>
     <ClCompile Include="JsonComObject.iid.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -275,7 +275,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="JsonComObject.def" />
-    <None Include="JsonComObject.rgs" />
+    <None Include="res\JsonComObject.rgs" />
+    <None Include="res\JsonParser.rgs" />
   </ItemGroup>
   <ItemGroup>
     <Midl Include="JsonComObject.idl" />
