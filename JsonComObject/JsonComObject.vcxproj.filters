@@ -71,6 +71,6 @@
     </Midl>
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="JsonComObject.manifest" />
+    <Manifest Include="res\JsonComObject.manifest" />
   </ItemGroup>
 </Project>
