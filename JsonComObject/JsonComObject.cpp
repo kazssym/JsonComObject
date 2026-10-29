@@ -43,7 +43,7 @@ class CJsonComObjectModule : public ATL::CAtlDllModuleT<CJsonComObjectModule>
 {
 public:
     DECLARE_LIBID(LIBID_JsonComObjectLib)
-    DECLARE_REGISTRY_APPID_RESOURCEID(IDR_JSONCOMOBJECT, "{E1603BED-3CF1-47A1-9645-C4B29BFB464F}")
+    DECLARE_REGISTRY_RESOURCEID(IDR_JSONCOMOBJECT)
 };
 
 export CJsonComObjectModule _AtlModule;  // NOSONAR
