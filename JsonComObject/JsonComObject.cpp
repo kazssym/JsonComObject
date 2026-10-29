@@ -29,7 +29,9 @@ module;
 #include "resource.h"
 #include <Windows.h>
 #include <atlbase.h>
+#include <atlcom.h>
 #include <sal.h>
+#include <wil/result_macros.h>
 
 
 export module JsonComObject;
@@ -71,4 +73,12 @@ export STDAPI DllRegisterServer()
 export STDAPI DllUnregisterServer()
 {
     return _AtlModule.DllUnregisterServer();
+}
+
+export STDAPI DllInstall(const BOOL bInstall, _In_opt_ const PCWSTR pszCmdLine)
+{
+    const auto per_user = lstrcmpi(pszCmdLine, TEXT("User")) == 0;
+    RETURN_IF_FAILED(ATL::AtlSetPerUserRegistration(per_user ? TRUE : FALSE));
+
+    return bInstall ? DllRegisterServer() : DllUnregisterServer();
 }
