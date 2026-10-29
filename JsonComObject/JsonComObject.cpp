@@ -27,11 +27,8 @@ module;
 
 #include "JsonComObject_i.h"
 #include "resource.h"
-#include <Windows.h>
 #include <atlbase.h>
 #include <atlcom.h>
-#include <sal.h>
-#include <wil/result_macros.h>
 
 
 export module JsonComObject;
@@ -51,34 +48,3 @@ public:
 export CJsonComObjectModule _AtlModule;  // NOSONAR
 
 }  // namespace JsonComObject
-
-using JsonComObject::_AtlModule;
-
-_Check_return_
-export STDAPI DllGetClassObject(_In_ REFCLSID rclsid, _In_ REFIID riid, _Outptr_ LPVOID *const ppv)
-{
-    return _AtlModule.DllGetClassObject(rclsid, riid, ppv);
-}
-
-export STDAPI DllCanUnloadNow()
-{
-    return _AtlModule.DllCanUnloadNow();
-}
-
-export STDAPI DllRegisterServer()
-{
-    return _AtlModule.DllRegisterServer();
-}
-
-export STDAPI DllUnregisterServer()
-{
-    return _AtlModule.DllUnregisterServer();
-}
-
-export STDAPI DllInstall(const BOOL bInstall, _In_opt_ const PCWSTR pszCmdLine)
-{
-    const auto per_user = lstrcmpi(pszCmdLine, TEXT("User")) == 0;
-    RETURN_IF_FAILED(ATL::AtlSetPerUserRegistration(per_user ? TRUE : FALSE));
-
-    return bInstall ? DllRegisterServer() : DllUnregisterServer();
-}
