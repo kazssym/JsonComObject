@@ -48,6 +48,9 @@
     <ClCompile Include="JsonComObject-Parser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DllExport.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="JsonComObject.rc">
@@ -71,6 +74,6 @@
     </Midl>
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="JsonComObject.manifest" />
+    <Manifest Include="res\JsonComObject.manifest" />
   </ItemGroup>
 </Project>

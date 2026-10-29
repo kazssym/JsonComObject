@@ -27,9 +27,8 @@ module;
 
 #include "JsonComObject_i.h"
 #include "resource.h"
-#include <Windows.h>
 #include <atlbase.h>
-#include <sal.h>
+#include <atlcom.h>
 
 
 export module JsonComObject;
@@ -43,32 +42,9 @@ class CJsonComObjectModule : public ATL::CAtlDllModuleT<CJsonComObjectModule>
 {
 public:
     DECLARE_LIBID(LIBID_JsonComObjectLib)
-    DECLARE_REGISTRY_APPID_RESOURCEID(IDR_JSONCOMOBJECT, "{E1603BED-3CF1-47A1-9645-C4B29BFB464F}")
+    DECLARE_REGISTRY_RESOURCEID(IDR_JSONCOMOBJECT)
 };
 
 export CJsonComObjectModule _AtlModule;  // NOSONAR
 
 }  // namespace JsonComObject
-
-using JsonComObject::_AtlModule;
-
-_Check_return_
-export STDAPI DllGetClassObject(_In_ REFCLSID rclsid, _In_ REFIID riid, _Outptr_ LPVOID *const ppv)
-{
-    return _AtlModule.DllGetClassObject(rclsid, riid, ppv);
-}
-
-export STDAPI DllCanUnloadNow()
-{
-    return _AtlModule.DllCanUnloadNow();
-}
-
-export STDAPI DllRegisterServer()
-{
-    return _AtlModule.DllRegisterServer();
-}
-
-export STDAPI DllUnregisterServer()
-{
-    return _AtlModule.DllUnregisterServer();
-}

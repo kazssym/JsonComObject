@@ -2,7 +2,7 @@
 <assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
   <assemblyIdentity type="win32" name="JsonComObject" version="1.0.0.0"/>
   <file name="JsonComObject.dll">
-    <comClass description="JSON Parser Object" clsid="{DE019FE6-BF16-49EB-852D-9EFB239350C0}" threadingModel="Free" tlbid="{E1603BED-3CF1-47A1-9645-C4B29BFB464F}" progid="JsonComObject.JsonParser.1"/>
+    <comClass description="JSON Parser Object 1.0" clsid="{DE019FE6-BF16-49EB-852D-9EFB239350C0}" threadingModel="Free" progid="JsonComObject.JsonParser.1"/>
     <typelib tlbid="{E1603BED-3CF1-47A1-9645-C4B29BFB464F}" version="1.0" helpdir=""/>
   </file>
 </assembly>

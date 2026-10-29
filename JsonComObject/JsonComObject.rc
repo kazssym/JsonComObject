@@ -106,7 +106,7 @@ IDR_JSONPARSER          REGISTRY                "res\\JsonParser.rgs"
 // RT_MANIFEST
 //
 
-1                       RT_MANIFEST             "JsonComObject.manifest"
+1                       RT_MANIFEST             "res\\JsonComObject.manifest"
 
 
 /////////////////////////////////////////////////////////////////////////////

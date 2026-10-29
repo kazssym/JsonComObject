@@ -46,7 +46,7 @@ library JsonComObjectLib
 
     [
         uuid(DE019FE6-BF16-49EB-852D-9EFB239350C0),
-        version(1.0), helpstring("JsonParser Class"),
+        version(1.0), helpstring("JSON Parser Object 1.0"),
     ]
     coclass JsonParser
     {
