@@ -22,6 +22,7 @@
 // SPDX-License-Identifier: MIT
 
 #include <JsonComObject_i.h>
+#include <Windows.h>
 #include <atlcomcli.h>
 #include <boost/test/unit_test.hpp>
 #include <boost/test/unit_test_suite.hpp>
@@ -35,19 +36,37 @@ namespace JsonComObject
 namespace
 {
 
-struct ParserFixture
+struct ParserTestFixture
 {
-    ParserFixture() noexcept = default;
-    ~ParserFixture() noexcept = default;
+    ParserTestFixture() noexcept = default;
+    ~ParserTestFixture() noexcept = default;
 };
 
 } // namespace
 
-BOOST_FIXTURE_TEST_CASE(ParserTest, ParserFixture)
+
+using namespace ::ATL;
+
+
+BOOST_FIXTURE_TEST_CASE(ParserTest, ParserTestFixture)
 {
-    ATL::CComPtr<IJsonParser> parser;
-    const auto hr = parser.CoCreateInstance(CLSID_JsonParser, nullptr);
-    BOOST_TEST(SUCCEEDED(hr));
+    auto parser = CComPtr<IJsonParser>();
+    BOOST_TEST(SUCCEEDED(parser.CoCreateInstance(CLSID_JsonParser, nullptr)));
+    BOOST_TEST_REQUIRE(parser != nullptr);
+
+    BOOST_TEST(parser->ParseJson(CComBSTR(), nullptr) == E_INVALIDARG);
+
+    auto var1 = CComVariant();
+    BOOST_TEST(parser->ParseJson(CComBSTR(), &var1) == E_INVALIDARG);
+
+    auto var2 = CComVariant();
+    BOOST_TEST(parser->ParseJson(CComBSTR(OLESTR("null")), &var2) == E_NOTIMPL); // Not implemented yet.
+
+    auto var3 = CComVariant();
+    BOOST_TEST(parser->ParseJson(CComBSTR(OLESTR("false")), &var3) == E_NOTIMPL); // Not implemented yet.
+
+    auto var4 = CComVariant();
+    BOOST_TEST(parser->ParseJson(CComBSTR(OLESTR("true")), &var4) == E_NOTIMPL); // Not implemented yet.
 }
 
 } // namespace JsonComObject

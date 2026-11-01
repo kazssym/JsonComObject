@@ -1,22 +1,22 @@
 HKCR
 {
-    JsonComObject.JsonParser = s 'JSON Parser Object'
+    'JsonComObject.JsonParser' = s 'JSON Parser Object'
     {
         CurVer = s 'JsonComObject.JsonParser.1'
     }
-    JsonComObject.JsonParser.1 = s 'JSON Parser Object 1.0'
+    'JsonComObject.JsonParser.1' = s 'JSON Parser Object 1.0'
     {
         CLSID = s '{DE019FE6-BF16-49EB-852D-9EFB239350C0}'
     }
-    NoRemove CLSID
+    NoRemove 'CLSID'
     {
-        ForceRemove {DE019FE6-BF16-49EB-852D-9EFB239350C0} = s 'JSON Parser Object 1.0'
+        ForceRemove '{DE019FE6-BF16-49EB-852D-9EFB239350C0}' = s 'JSON Parser Object 1.0'
         {
-            ProgID = s 'JsonComObject.JsonParser.1'
-            VersionIndependentProgID = s 'JsonComObject.JsonParser'
-            InprocServer32 = s '%MODULE%'
+            'ProgID' = s 'JsonComObject.JsonParser.1'
+            'VersionIndependentProgID' = s 'JsonComObject.JsonParser'
+            'InprocServer32' = s '%MODULE%'
             {
-                val ThreadingModel = s 'Free'
+                val 'ThreadingModel' = s 'Free'
             }
         }
     }
