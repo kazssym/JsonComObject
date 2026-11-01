@@ -4,6 +4,7 @@
   "builtin-baseline": "8c5c88430ac864cf4fe8de4be61f69f003d23ffe",
   "dependencies": [
     "boost-test",
+    "jsoncons",
     "ms-gsl",
     "wil"
   ]
