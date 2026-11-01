@@ -54,8 +54,19 @@ BOOST_FIXTURE_TEST_CASE(ParserTest, ParserTestFixture)
     BOOST_TEST(SUCCEEDED(parser.CoCreateInstance(CLSID_JsonParser, nullptr)));
     BOOST_TEST_REQUIRE(parser != nullptr);
 
+    BOOST_TEST(parser->ParseJson(CComBSTR(), nullptr) == E_INVALIDARG);
+
     auto var1 = CComVariant();
-    BOOST_TEST(parser->ParseJson(CComBSTR(), &var1) == E_NOTIMPL); // Not implemented yet
+    BOOST_TEST(parser->ParseJson(CComBSTR(), &var1) == E_INVALIDARG);
+
+    auto var2 = CComVariant();
+    BOOST_TEST(parser->ParseJson(CComBSTR(OLESTR("null")), &var2) == E_NOTIMPL); // Not implemented yet.
+
+    auto var3 = CComVariant();
+    BOOST_TEST(parser->ParseJson(CComBSTR(OLESTR("false")), &var3) == E_NOTIMPL); // Not implemented yet.
+
+    auto var4 = CComVariant();
+    BOOST_TEST(parser->ParseJson(CComBSTR(OLESTR("true")), &var4) == E_NOTIMPL); // Not implemented yet.
 }
 
 } // namespace JsonComObject
