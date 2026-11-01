@@ -31,6 +31,7 @@ module;
 #include <atlbase.h>
 #include <atlcom.h>
 #include <atldef.h>
+#include <wil/result_macros.h>
 
 
 export module JsonComObject:Parser;
@@ -62,9 +63,14 @@ export class ATL_NO_VTABLE CJsonParser
     virtual ~CJsonParser() noexcept = default;
 
 
-    auto ParseJson(BSTR json, VARIANT *result) noexcept -> HRESULT override
+    auto ParseJson(const BSTR json, VARIANT *const result) noexcept -> HRESULT override
     {
-        return E_NOTIMPL;
+        RETURN_HR_IF_NULL(E_INVALIDARG, result);
+        RETURN_HR_IF_NULL(E_INVALIDARG, json);
+        LOG_HR_IF(E_INVALIDARG, V_VT(result) != VT_EMPTY);
+        ::VariantInit(result);
+
+        return E_NOTIMPL; // TODO: Implement this.
     }
 };
 
