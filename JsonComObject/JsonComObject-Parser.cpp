@@ -67,7 +67,6 @@ export class ATL_NO_VTABLE CJsonParser
     {
         RETURN_HR_IF_NULL(E_INVALIDARG, result);
         RETURN_HR_IF_NULL(E_INVALIDARG, json);
-        LOG_HR_IF(E_INVALIDARG, V_VT(result) != VT_EMPTY);
         ::VariantInit(result);
 
         return E_NOTIMPL; // TODO: Implement this.
