@@ -1,4 +1,4 @@
-// JsonComObjectTest.cpp - main test module
+// JsonComObject.Test.cpp - main test module
 // Copyright © 2026 Kaz Nishimura
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
