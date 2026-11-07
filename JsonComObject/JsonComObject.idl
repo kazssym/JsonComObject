@@ -36,6 +36,24 @@ library JsonComObjectLib
     importlib("stdole2.tlb");
 
     [
+        uuid(1FE85A47-FD30-4F49-801F-5D3BD1C2582D),
+        object, oleautomation, dual,
+    ] 
+    interface IJsonObject : IDispatch
+    {
+        [propget] HRESULT At([in] BSTR key, [out, retval] VARIANT *result);
+    };
+
+    [
+        uuid(ED288437-4F2D-44B7-B8B1-710E57F502C9),
+        object, oleautomation, dual,
+    ] 
+    interface IJsonArray : IDispatch
+    {
+        [propget] HRESULT At([in] LONG pos, [out, retval] VARIANT *result);
+    };
+
+    [
         uuid(5209FCEF-4C08-4C84-8A8F-9E7D198663AA),
         object, oleautomation, dual,
     ] 
