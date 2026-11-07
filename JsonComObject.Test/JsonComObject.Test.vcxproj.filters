@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="JsonComObjectTest.cpp">
+    <ClCompile Include="JsonComObject.Test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TypeLibTest.cpp">
