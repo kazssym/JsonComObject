@@ -40,6 +40,7 @@ module;
 #include <jsoncons/json_exception.hpp>
 #include <jsoncons/staj_event.hpp>
 #include <jsoncons/utility/byte_string.hpp>
+#include <mutex>
 #include <string_view>
 #include <strsafe.h>
 #include <utility>
@@ -56,6 +57,8 @@ using jsoncons::wjson;
 using jsoncons::wjson_string_cursor;
 using std::exception;
 using std::move;
+using std::mutex;
+using std::scoped_lock;
 using std::wstring_view;
 
 
@@ -100,16 +103,24 @@ protected:
         {
         case string_value: {
             const auto sv = cur.get<wstring_view>();
-            return CComVariant(CComBSTR(gsl::narrow<int>(sv.size()), sv.data()));
+            const auto bstr = CComBSTR(gsl::narrow<int>(sv.size()), sv.data());
+            cursor.next();
+            return bstr;
         }
         case byte_string_value: {
             const auto sv = cur.get<byte_string_view>();
-            return CComVariant(CComBSTR(gsl::narrow<int>(sv.size()), reinterpret_cast<LPCSTR>(sv.data())));
+            const auto bstr = CComBSTR(gsl::narrow<int>(sv.size()), reinterpret_cast<LPCSTR>(sv.data()));
+            cursor.next();
+            return bstr;
         }
         case null_value:
-            return CComVariant(VARIANT{VT_NULL});
-        case bool_value:
-            return CComVariant(cur.get<bool>());
+            cursor.next();
+            return VARIANT{VT_NULL};
+        case bool_value: {
+            const auto b = cur.get<bool>();
+            cursor.next();
+            return b;
+        }
         default:
             THROW_HR_MSG(E_NOTIMPL, "Not implemented yet.");
         }
@@ -130,6 +141,7 @@ protected:
 
 private:
     CComVariant root_json_value;
+    mutex root_json_value_mutex;
 
 public:
     auto ParseJson(const BSTR json_str, VARIANT *const result) noexcept -> HRESULT override
@@ -137,6 +149,7 @@ public:
         RETURN_HR_IF_NULL(E_INVALIDARG, result);
         RETURN_HR_IF_NULL(E_INVALIDARG, json_str);
 
+        auto lock = scoped_lock(this->root_json_value_mutex);
         try
         {
             auto cursor = wjson_string_cursor(json_str);
