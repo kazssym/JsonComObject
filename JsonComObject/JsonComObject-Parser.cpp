@@ -178,15 +178,19 @@ public:
         }
         catch (const CAtlException &ex)
         {
-            RETURN_HR(ex.m_hr);
+            return ex.m_hr;
+        }
+        catch (const wil::ResultException &ex)
+        {
+            return ex.GetErrorCode();
         }
         catch (const gsl::narrowing_error &)
         {
             RETURN_HR(DISP_E_OVERFLOW);
         }
-        catch (const exception &)
+        catch (const exception &ex)
         {
-            RETURN_HR(E_UNEXPECTED);
+            RETURN_HR_MSG(E_UNEXPECTED, "%hs", ex.what());
         }
     }
 };
