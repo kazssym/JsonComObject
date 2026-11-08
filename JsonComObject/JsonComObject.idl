@@ -41,7 +41,7 @@ library JsonComObjectLib
     ] 
     interface IJsonObject : IDispatch
     {
-        [propget] HRESULT At([in] BSTR key, [out, retval] VARIANT *result);
+        [propget, id(DISPID_VALUE)] HRESULT Item([in] BSTR key, [out, retval] VARIANT *result);
     };
 
     [
@@ -50,7 +50,7 @@ library JsonComObjectLib
     ] 
     interface IJsonArray : IDispatch
     {
-        [propget] HRESULT At([in] LONG pos, [out, retval] VARIANT *result);
+        [propget, id(DISPID_VALUE)] HRESULT Item([in] LONG pos, [out, retval] VARIANT *result);
     };
 
     [
