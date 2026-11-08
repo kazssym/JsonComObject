@@ -48,6 +48,7 @@ module;
 #include <wil/result_macros.h>
 
 using ATL::CA2W;
+using ATL::CAtlException;
 using ATL::CComBSTR;
 using ATL::CComPtr;
 using ATL::CComVariant;
@@ -161,19 +162,23 @@ public:
 
             return S_OK;
         }
-        catch (const json_exception &e)
+        catch (const json_exception &ex)
         {
             auto cei = CComPtr<ICreateErrorInfo>();
             RETURN_IF_FAILED(::CreateErrorInfo(&cei));
             RETURN_IF_FAILED(cei->SetGUID(IID_IJsonParser));
             RETURN_IF_FAILED(cei->SetSource(CComBSTR(OLESTR("JsonComObject.JsonParser"))));
-            RETURN_IF_FAILED(cei->SetDescription(CA2W(e.what())));
+            RETURN_IF_FAILED(cei->SetDescription(CA2W(ex.what())));
             
             auto ei = CComPtr<IErrorInfo>();
             RETURN_IF_FAILED(cei->QueryInterface(&ei));
             RETURN_IF_FAILED(::SetErrorInfo(0, ei));
 
             RETURN_HR(DISP_E_EXCEPTION);
+        }
+        catch (const CAtlException &ex)
+        {
+            RETURN_HR(ex.m_hr);
         }
         catch (const gsl::narrowing_error &)
         {
