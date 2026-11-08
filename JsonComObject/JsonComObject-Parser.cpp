@@ -35,7 +35,6 @@ module;
 #include <atlconv.h>
 #include <atldef.h>
 #include <gsl/narrow>
-#include <gsl/util>
 #include <jsoncons/basic_json.hpp>
 #include <jsoncons/json_cursor.hpp>
 #include <jsoncons/json_exception.hpp>
@@ -95,17 +94,6 @@ protected:
         {
             return {};
         }
-
-        [[maybe_unused]] auto call_next_finally = gsl::finally([&cursor]() noexcept {
-            try
-            {
-                cursor.next();
-            }
-            catch (const exception &ex)
-            {
-                LOG_HR_MSG(E_UNEXPECTED, "%hs", ex.what());
-            }
-        });
 
         using enum staj_events;
         switch (const auto &cur = cursor.current(); cur.event_type())
