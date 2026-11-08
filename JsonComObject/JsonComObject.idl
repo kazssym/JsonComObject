@@ -42,6 +42,8 @@ library JsonComObjectLib
     interface IJsonObject : IDispatch
     {
         [propget, id(DISPID_VALUE)] HRESULT Item([in] BSTR key, [out, retval] VARIANT *result);
+        [propget, id(DISPID_NEWENUM)] HRESULT _NewEnum([out, retval] IEnumVARIANT **result);
+        [propget] HRESULT Count([out, retval] LONG *result);
     };
 
     [
@@ -51,6 +53,8 @@ library JsonComObjectLib
     interface IJsonArray : IDispatch
     {
         [propget, id(DISPID_VALUE)] HRESULT Item([in] LONG pos, [out, retval] VARIANT *result);
+        [propget, id(DISPID_NEWENUM)] HRESULT _NewEnum([out, retval] IEnumVARIANT **result);
+        [propget] HRESULT Count([out, retval] LONG *result);
     };
 
     [
