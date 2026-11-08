@@ -9,7 +9,7 @@ Status: work in progress.
 
 - Parses JSON text into COM-visible values (not implemented yet)
 - Exposes a `JsonParser` coclass through `IJsonParser`
-- Provides `IJsonObject` and `IJsonArray` interfaces for item access and enumeration
+- Provides `IJsonObject` and `IJsonArray` interfaces for item access and enumeration (not implemented yet)
 
 ## Build
 
