@@ -35,6 +35,7 @@ module;
 #include <atlconv.h>
 #include <atldef.h>
 #include <gsl/narrow>
+#include <gsl/util>
 #include <jsoncons/basic_json.hpp>
 #include <jsoncons/json_cursor.hpp>
 #include <jsoncons/json_exception.hpp>
