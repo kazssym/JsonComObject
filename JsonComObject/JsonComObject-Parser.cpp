@@ -114,8 +114,7 @@ protected:
         case bool_value:
             return CComVariant(cur.get<bool>());
         default:
-            LOG_HR_MSG(E_NOTIMPL, "Not implemented yet.");
-            return {};
+            THROW_HR_MSG(E_NOTIMPL, "Not implemented yet.");
         }
     }
 
