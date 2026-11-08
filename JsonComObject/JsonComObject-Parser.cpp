@@ -32,6 +32,7 @@ module;
 #include <atlbase.h>
 #include <atlcom.h>
 #include <atlcomcli.h>
+#include <atlconv.h>
 #include <atldef.h>
 #include <gsl/narrow>
 #include <jsoncons/basic_json.hpp>
@@ -44,13 +45,16 @@ module;
 #include <utility>
 #include <wil/result_macros.h>
 
+using ATL::CA2W;
 using ATL::CComBSTR;
+using ATL::CComPtr;
 using ATL::CComVariant;
 using jsoncons::byte_string_view;
 using jsoncons::json_exception;
 using jsoncons::staj_events;
 using jsoncons::wjson;
 using jsoncons::wjson_string_cursor;
+using std::exception;
 using std::move;
 using std::wstring_view;
 
@@ -146,9 +150,27 @@ public:
 
             return S_OK;
         }
-        catch (const json_exception &)
+        catch (const json_exception &e)
         {
-            RETURN_HR(E_FAIL);
+            auto cei = CComPtr<ICreateErrorInfo>();
+            RETURN_IF_FAILED(::CreateErrorInfo(&cei));
+            RETURN_IF_FAILED(cei->SetGUID(IID_IJsonParser));
+            RETURN_IF_FAILED(cei->SetSource(CComBSTR(OLESTR("JsonComObject.JsonParser"))));
+            RETURN_IF_FAILED(cei->SetDescription(CA2W(e.what())));
+            
+            auto ei = CComPtr<IErrorInfo>();
+            RETURN_IF_FAILED(cei->QueryInterface(&ei));
+            RETURN_IF_FAILED(::SetErrorInfo(0, ei));
+
+            RETURN_HR(DISP_E_EXCEPTION);
+        }
+        catch (const gsl::narrowing_error &)
+        {
+            RETURN_HR(DISP_E_OVERFLOW);
+        }
+        catch (const exception &)
+        {
+            RETURN_HR(E_UNEXPECTED);
         }
     }
 };
