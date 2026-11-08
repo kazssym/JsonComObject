@@ -96,7 +96,16 @@ protected:
             return {};
         }
 
-        [[maybe_unused]] auto call_next_finally = gsl::finally([&cursor]() { cursor.next(); });
+        [[maybe_unused]] auto call_next_finally = gsl::finally([&cursor]() noexcept {
+            try
+            {
+                cursor.next();
+            }
+            catch (const exception &ex)
+            {
+                LOG_HR_MSG(E_UNEXPECTED, "%hs", ex.what());
+            }
+        });
 
         using enum staj_events;
         switch (const auto &cur = cursor.current(); cur.event_type())
