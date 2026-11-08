@@ -28,10 +28,40 @@ module;
 #include "JsonComObject_i.h"
 #include "resource.h"
 #include <Windows.h>
+#include <algorithm>
 #include <atlbase.h>
 #include <atlcom.h>
+#include <atlcomcli.h>
+#include <atlconv.h>
 #include <atldef.h>
+#include <exception>
+#include <gsl/narrow>
+#include <jsoncons/basic_json.hpp>
+#include <jsoncons/json_cursor.hpp>
+#include <jsoncons/json_exception.hpp>
+#include <jsoncons/staj_event.hpp>
+#include <jsoncons/utility/byte_string.hpp>
+#include <mutex>
+#include <string_view>
+#include <strsafe.h>
+#include <utility>
 #include <wil/result_macros.h>
+
+using ATL::CA2W;
+using ATL::CAtlException;
+using ATL::CComBSTR;
+using ATL::CComPtr;
+using ATL::CComVariant;
+using jsoncons::byte_string_view;
+using jsoncons::json_exception;
+using jsoncons::staj_events;
+using jsoncons::wjson;
+using jsoncons::wjson_string_cursor;
+using std::exception;
+using std::move;
+using std::mutex;
+using std::scoped_lock;
+using std::wstring_view;
 
 
 export module JsonComObject:Parser;
@@ -62,14 +92,106 @@ export class ATL_NO_VTABLE CJsonParser
 
     virtual ~CJsonParser() noexcept = default;
 
+protected:
+    auto ParseJsonValue(wjson_string_cursor &cursor) const -> CComVariant
+    {
+        if (cursor.done())
+        {
+            return {};
+        }
 
-    auto ParseJson(const BSTR json, VARIANT *const result) noexcept -> HRESULT override
+        using enum staj_events;
+        switch (const auto &cur = cursor.current(); cur.event_type())
+        {
+        case string_value: {
+            const auto sv = cur.get<wstring_view>();
+            const auto bstr = CComBSTR(gsl::narrow<int>(sv.size()), sv.data());
+            cursor.next();
+            return bstr;
+        }
+        case byte_string_value: {
+            const auto sv = cur.get<byte_string_view>();
+            const auto bstr = CComBSTR(gsl::narrow<int>(sv.size()), reinterpret_cast<LPCSTR>(sv.data()));
+            cursor.next();
+            return bstr;
+        }
+        case null_value:
+            cursor.next();
+            return VARIANT{VT_NULL};
+        case bool_value: {
+            const auto b = cur.get<bool>();
+            cursor.next();
+            return b;
+        }
+        default:
+            THROW_HR_MSG(E_NOTIMPL, "Not implemented yet.");
+        }
+    }
+
+
+    constexpr auto &GetRootJsonValue() const noexcept
+    {
+        return this->root_json_value;
+    }
+
+    void SetRootJsonValue(CComVariant json_value)
+    {
+        auto v = VARIANT{};
+        THROW_IF_FAILED(json_value.Detach(&v));
+        THROW_IF_FAILED(this->root_json_value.Attach(&v));
+    }
+
+private:
+    CComVariant root_json_value;
+    mutex root_json_value_mutex;
+
+public:
+    auto ParseJson(const BSTR json_str, VARIANT *const result) noexcept -> HRESULT override
     {
         RETURN_HR_IF_NULL(E_INVALIDARG, result);
-        RETURN_HR_IF_NULL(E_INVALIDARG, json);
-        ::VariantInit(result);
+        RETURN_HR_IF_NULL(E_INVALIDARG, json_str);
 
-        return E_NOTIMPL; // TODO: Implement this.
+        auto lock = scoped_lock(this->root_json_value_mutex);
+        try
+        {
+            auto cursor = wjson_string_cursor(json_str);
+            this->SetRootJsonValue(this->ParseJsonValue(cursor));
+
+            ::VariantInit(result);
+            RETURN_IF_FAILED(::VariantCopy(result, &this->GetRootJsonValue()));
+
+            return S_OK;
+        }
+        catch (const json_exception &ex)
+        {
+            auto cei = CComPtr<ICreateErrorInfo>();
+            RETURN_IF_FAILED(::CreateErrorInfo(&cei));
+            RETURN_IF_FAILED(cei->SetGUID(IID_IJsonParser));
+            RETURN_IF_FAILED(cei->SetSource(CComBSTR(OLESTR("JsonComObject.JsonParser"))));
+            RETURN_IF_FAILED(cei->SetDescription(CA2W(ex.what())));
+            
+            auto ei = CComPtr<IErrorInfo>();
+            RETURN_IF_FAILED(cei->QueryInterface(&ei));
+            RETURN_IF_FAILED(::SetErrorInfo(0, ei));
+
+            RETURN_HR(DISP_E_EXCEPTION);
+        }
+        catch (const CAtlException &ex)
+        {
+            return ex.m_hr;
+        }
+        catch (const wil::ResultException &ex)
+        {
+            return ex.GetErrorCode();
+        }
+        catch (const gsl::narrowing_error &)
+        {
+            RETURN_HR(DISP_E_OVERFLOW);
+        }
+        catch (const exception &ex)
+        {
+            RETURN_HR_MSG(E_UNEXPECTED, "%hs", ex.what());
+        }
     }
 };
 

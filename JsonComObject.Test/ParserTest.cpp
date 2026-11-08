@@ -59,14 +59,19 @@ BOOST_FIXTURE_TEST_CASE(ParserTest, ParserTestFixture)
     auto var1 = CComVariant();
     BOOST_TEST(parser->ParseJson(CComBSTR(), &var1) == E_INVALIDARG);
 
-    auto var2 = CComVariant();
-    BOOST_TEST(parser->ParseJson(CComBSTR(OLESTR("null")), &var2) == E_NOTIMPL); // Not implemented yet.
+    auto var_null = CComVariant();
+    BOOST_TEST(SUCCEEDED(parser->ParseJson(CComBSTR(OLESTR("null")), &var_null)));
+    BOOST_TEST(V_VT(&var_null) == VT_NULL);
 
-    auto var3 = CComVariant();
-    BOOST_TEST(parser->ParseJson(CComBSTR(OLESTR("false")), &var3) == E_NOTIMPL); // Not implemented yet.
+    auto var_false = CComVariant();
+    BOOST_TEST(SUCCEEDED(parser->ParseJson(CComBSTR(OLESTR("false")), &var_false)));
+    BOOST_TEST(V_VT(&var_false) == VT_BOOL);
+    BOOST_TEST(V_BOOL(&var_false) == VARIANT_FALSE);
 
-    auto var4 = CComVariant();
-    BOOST_TEST(parser->ParseJson(CComBSTR(OLESTR("true")), &var4) == E_NOTIMPL); // Not implemented yet.
+    auto var_true = CComVariant();
+    BOOST_TEST(SUCCEEDED(parser->ParseJson(CComBSTR(OLESTR("true")), &var_true)));
+    BOOST_TEST(V_VT(&var_true) == VT_BOOL);
+    BOOST_TEST(V_BOOL(&var_true) == VARIANT_TRUE);
 }
 
 } // namespace JsonComObject
