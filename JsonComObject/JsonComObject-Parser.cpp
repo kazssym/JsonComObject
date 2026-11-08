@@ -28,10 +28,31 @@ module;
 #include "JsonComObject_i.h"
 #include "resource.h"
 #include <Windows.h>
+#include <algorithm>
 #include <atlbase.h>
 #include <atlcom.h>
+#include <atlcomcli.h>
 #include <atldef.h>
+#include <gsl/narrow>
+#include <jsoncons/basic_json.hpp>
+#include <jsoncons/json_cursor.hpp>
+#include <jsoncons/json_exception.hpp>
+#include <jsoncons/staj_event.hpp>
+#include <jsoncons/utility/byte_string.hpp>
+#include <string_view>
+#include <strsafe.h>
+#include <utility>
 #include <wil/result_macros.h>
+
+using ATL::CComBSTR;
+using ATL::CComVariant;
+using jsoncons::byte_string_view;
+using jsoncons::json_exception;
+using jsoncons::staj_events;
+using jsoncons::wjson;
+using jsoncons::wjson_string_cursor;
+using std::move;
+using std::wstring_view;
 
 
 export module JsonComObject:Parser;
@@ -62,14 +83,73 @@ export class ATL_NO_VTABLE CJsonParser
 
     virtual ~CJsonParser() noexcept = default;
 
+protected:
+    auto ParseJsonValue(wjson_string_cursor &cursor) const -> CComVariant
+    {
+        if (cursor.done())
+        {
+            return {};
+        }
 
-    auto ParseJson(const BSTR json, VARIANT *const result) noexcept -> HRESULT override
+        [[maybe_unused]] auto call_next_finally = gsl::finally([&cursor]() { cursor.next(); });
+
+        using enum staj_events;
+        switch (const auto &cur = cursor.current(); cur.event_type())
+        {
+        case string_value: {
+            const auto sv = cur.get<wstring_view>();
+            return CComVariant(CComBSTR(gsl::narrow<int>(sv.size()), sv.data()));
+        }
+        case byte_string_value: {
+            const auto sv = cur.get<byte_string_view>();
+            return CComVariant(CComBSTR(gsl::narrow<int>(sv.size()), reinterpret_cast<LPCSTR>(sv.data())));
+        }
+        case null_value:
+            return CComVariant(VARIANT{VT_NULL});
+        case bool_value:
+            return CComVariant(cur.get<bool>());
+        default:
+            LOG_HR_MSG(E_NOTIMPL, "Not implemented yet.");
+            return {};
+        }
+    }
+
+
+    constexpr auto &GetRootJsonValue() const noexcept
+    {
+        return this->root_json_value;
+    }
+
+    void SetRootJsonValue(CComVariant json_value)
+    {
+        auto v = VARIANT{};
+        THROW_IF_FAILED(json_value.Detach(&v));
+        THROW_IF_FAILED(this->root_json_value.Attach(&v));
+    }
+
+private:
+    CComVariant root_json_value;
+
+public:
+    auto ParseJson(const BSTR json_str, VARIANT *const result) noexcept -> HRESULT override
     {
         RETURN_HR_IF_NULL(E_INVALIDARG, result);
-        RETURN_HR_IF_NULL(E_INVALIDARG, json);
-        ::VariantInit(result);
+        RETURN_HR_IF_NULL(E_INVALIDARG, json_str);
 
-        return E_NOTIMPL; // TODO: Implement this.
+        try
+        {
+            auto cursor = wjson_string_cursor(json_str);
+            this->SetRootJsonValue(this->ParseJsonValue(cursor));
+
+            ::VariantInit(result);
+            RETURN_IF_FAILED(::VariantCopy(result, &this->GetRootJsonValue()));
+
+            return S_OK;
+        }
+        catch (const json_exception &)
+        {
+            RETURN_HR(E_FAIL);
+        }
     }
 };
 
