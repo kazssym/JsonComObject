@@ -1,12 +1,13 @@
 # JsonComObject
 
-A small Windows COM/ATL project that parses JSON and exposes the result as automation-friendly COM objects and arrays.
+A small Windows COM/ATL project that parses JSON and exposes the result as automation-friendly COM objects and arrays. The primary targets of this project are
+legacy systems that lack built-in JSON support.
 
 Status: work in progress.
 
 ## What it does
 
-- Parses JSON text into COM-visible values
+- Parses JSON text into COM-visible values (not implemented yet)
 - Exposes a `JsonParser` coclass through `IJsonParser`
 - Provides `IJsonObject` and `IJsonArray` interfaces for item access and enumeration
 
