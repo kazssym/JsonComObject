@@ -16,7 +16,7 @@ HKCR
             'VersionIndependentProgID' = s 'JsonComObject.JsonParser'
             'InprocServer32' = s '%MODULE%'
             {
-                val 'ThreadingModel' = s 'Free'
+                val 'ThreadingModel' = s 'Both'
             }
         }
     }
