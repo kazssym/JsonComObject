@@ -24,10 +24,16 @@
 #include <JsonComObject_i.h>
 #include <Windows.h>
 #include <atlcomcli.h>
+#include <atlconv.h>
 #include <boost/test/unit_test.hpp>
 #include <boost/test/unit_test_suite.hpp>
+#include <string_view>
 #include <strsafe.h>
 #include <wil/result_macros.h>
+
+using std::string_view;
+using namespace ATL;
+using namespace std::literals;
 
 
 namespace JsonComObject
@@ -43,9 +49,6 @@ struct ParserTestFixture
 };
 
 } // namespace
-
-
-using namespace ::ATL;
 
 
 BOOST_FIXTURE_TEST_CASE(ParserTest, ParserTestFixture)
@@ -72,6 +75,11 @@ BOOST_FIXTURE_TEST_CASE(ParserTest, ParserTestFixture)
     BOOST_TEST(SUCCEEDED(parser->ParseJson(CComBSTR(OLESTR("true")), &var_true)));
     BOOST_TEST(V_VT(&var_true) == VT_BOOL);
     BOOST_TEST(V_BOOL(&var_true) == VARIANT_TRUE);
+
+    auto var_string = CComVariant();
+    BOOST_TEST(SUCCEEDED(parser->ParseJson(CComBSTR(OLESTR(R"""("hello")""")), &var_string)));
+    BOOST_TEST(V_VT(&var_string) == VT_BSTR);
+    BOOST_TEST(string_view(CW2A(V_BSTR(&var_string))) == "hello"sv);
 }
 
 } // namespace JsonComObject
