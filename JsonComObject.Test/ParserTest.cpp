@@ -80,6 +80,16 @@ BOOST_FIXTURE_TEST_CASE(ParserTest, ParserTestFixture)
     BOOST_TEST(SUCCEEDED(parser->ParseJson(CComBSTR(OLESTR(R"""("hello")""")), &var_string)));
     BOOST_TEST(V_VT(&var_string) == VT_BSTR);
     BOOST_TEST(string_view(CW2A(V_BSTR(&var_string))) == "hello"sv);
+
+    auto var_number1 = CComVariant();
+    BOOST_TEST(SUCCEEDED(parser->ParseJson(CComBSTR(OLESTR("-123")), &var_number1)));
+    BOOST_TEST(V_VT(&var_number1) == VT_I8);
+    BOOST_TEST(V_I8(&var_number1) == -123);
+
+    auto var_number2 = CComVariant();
+    BOOST_TEST(SUCCEEDED(parser->ParseJson(CComBSTR(OLESTR("123")), &var_number2)));
+    BOOST_TEST(V_VT(&var_number2) == VT_UI8);
+    BOOST_TEST(V_UI8(&var_number2) == 123);
 }
 
 } // namespace JsonComObject
