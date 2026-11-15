@@ -67,11 +67,11 @@ BOOST_FIXTURE_TEST_CASE(ParserInterfaceTest, ParserTestFixture)
     ATLASSERT(agile_object != nullptr);
 }
 
-BOOST_FIXTURE_TEST_CASE(ParserTest, ParserTestFixture)
+BOOST_FIXTURE_TEST_CASE(ParseJsonTest, ParserTestFixture)
 {
     auto parser = CComPtr<IJsonParser>();
     BOOST_TEST(SUCCEEDED(parser.CoCreateInstance(CLSID_JsonParser, nullptr)));
-    BOOST_TEST_REQUIRE(parser != nullptr);
+    ATLASSERT(parser != nullptr);
 
     BOOST_TEST(parser->ParseJson(CComBSTR(), nullptr) == E_INVALIDARG);
 
@@ -96,16 +96,28 @@ BOOST_FIXTURE_TEST_CASE(ParserTest, ParserTestFixture)
     BOOST_TEST(SUCCEEDED(parser->ParseJson(CComBSTR(OLESTR(R"""("hello")""")), &var_string)));
     BOOST_TEST(V_VT(&var_string) == VT_BSTR);
     BOOST_TEST(string_view(CW2A(V_BSTR(&var_string))) == "hello"sv);
+}
+
+BOOST_FIXTURE_TEST_CASE(ParseJsonNumberTest, ParserTestFixture)
+{
+    auto parser = CComPtr<IJsonParser>();
+    BOOST_TEST_REQUIRE(SUCCEEDED(parser.CoCreateInstance(CLSID_JsonParser, nullptr)));
+    ATLASSERT(parser != nullptr);
 
     auto var_number1 = CComVariant();
-    BOOST_TEST(SUCCEEDED(parser->ParseJson(CComBSTR(OLESTR("-123")), &var_number1)));
+    BOOST_TEST(!FAILED(parser->ParseJson(CComBSTR(OLESTR("-123")), &var_number1)));
     BOOST_TEST(V_VT(&var_number1) == VT_I8);
     BOOST_TEST(V_I8(&var_number1) == -123);
 
     auto var_number2 = CComVariant();
-    BOOST_TEST(SUCCEEDED(parser->ParseJson(CComBSTR(OLESTR("123")), &var_number2)));
+    BOOST_TEST(!FAILED(parser->ParseJson(CComBSTR(OLESTR("123")), &var_number2)));
     BOOST_TEST(V_VT(&var_number2) == VT_UI8);
     BOOST_TEST(V_UI8(&var_number2) == 123);
+
+    auto var_number3 = CComVariant();
+    BOOST_TEST(!FAILED(parser->ParseJson(CComBSTR(OLESTR("123.5")), &var_number3)));
+    BOOST_TEST(V_VT(&var_number3) == VT_R8);
+    BOOST_TEST(V_R8(&var_number3) == 123.5);
 }
 
 } // namespace JsonComObject
