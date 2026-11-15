@@ -35,6 +35,7 @@ module;
 #include <atlconv.h>
 #include <atldef.h>
 #include <atlexcept.h>
+#include <cstdint>
 #include <exception>
 #include <gsl/narrow>
 #include <jsoncons/basic_json.hpp>
@@ -59,10 +60,12 @@ using jsoncons::staj_events;
 using jsoncons::wjson;
 using jsoncons::wjson_string_cursor;
 using std::exception;
+using std::int64_t;
 using std::move;
 using std::mutex;
 using std::scoped_lock;
 using std::wstring_view;
+using std::uint64_t;
 
 
 export module JsonComObject:Parser;
@@ -112,26 +115,116 @@ protected:
             cursor.next();
             return bstr;
         }
-        case byte_string_value: {
+#if 0 // byte_string not supported in this implementation
+		case byte_string_value: {
             const auto sv = cur.get<byte_string_view>();
             const auto bstr = CComBSTR(gsl::narrow<int>(sv.size()), reinterpret_cast<LPCSTR>(sv.data()));
             cursor.next();
             return bstr;
         }
+#endif
         case null_value:
-            cursor.next();
-            return VARIANT{VT_NULL};
-        case bool_value: {
-            const auto b = cur.get<bool>();
-            cursor.next();
-            return b;
-        }
+            return this->ParseNullValue(cursor);
+        case bool_value:
+            return this->ParseBoolValue(cursor);
+        case int64_value:
+            return this->ParseInt64Value(cursor);
+        case uint64_value:
+            return this->ParseUint64Value(cursor);
+        case double_value:
+            return this->ParseDoubleValue(cursor);
         default:
             THROW_HR_MSG(E_NOTIMPL, "Not implemented yet.");
         }
     }
 
+private:
+    auto ParseNullValue(wjson_string_cursor &cursor) const -> CComVariant
+    {
+        THROW_HR_IF(E_UNEXPECTED, cursor.done());
 
+        using enum staj_events;
+        const auto &cur = cursor.current();
+        THROW_HR_IF(E_UNEXPECTED, cur.event_type() != null_value);
+
+        cursor.next();
+        return VARIANT{VT_NULL};
+    }
+
+    auto ParseBoolValue(wjson_string_cursor &cursor) const -> CComVariant
+    {
+        THROW_HR_IF(E_UNEXPECTED, cursor.done());
+
+        using enum staj_events;
+        const auto &cur = cursor.current();
+        THROW_HR_IF(E_UNEXPECTED, cur.event_type() != bool_value);
+
+        const auto b = cur.get<bool>();
+        cursor.next();
+        return b;
+    }
+
+    /// @brief Parses the current JSON token as a signed 64-bit integer and returns the parsed value as a variant.
+    /// 
+    /// @param[in,out] cursor A JSON cursor positioned at the current token; it must not be at the end and must
+    /// reference an int64 value.
+    /// @return A CComVariant containing the parsed value of VT_I8 type.
+    /// @throws wil::ResultException(E_UNEXPECTED) if the cursor is at the end or the current token is not an int64 value.
+    auto ParseInt64Value(wjson_string_cursor &cursor) const -> CComVariant
+    {
+        THROW_HR_IF(E_UNEXPECTED, cursor.done());
+
+        using enum staj_events;
+        const auto &cur = cursor.current();
+        THROW_HR_IF(E_UNEXPECTED, cur.event_type() != int64_value);
+
+        const auto n = cur.get<int64_t>();
+        cursor.next();
+        return n;
+    }
+
+    /// @brief Parses the current JSON token as an unsigned 64-bit integer and returns the parsed value as a variant.
+    ///
+    /// @param[in,out] cursor A JSON cursor positioned at the current token; it must not be at the end and must
+    /// reference an uint64 value.
+    /// @return A CComVariant containing the parsed value of VT_UI8 type.
+    /// @throws wil::ResultException(E_UNEXPECTED) if the cursor is at the end or the current token is not an uint64
+    /// value.
+    auto ParseUint64Value(wjson_string_cursor &cursor) const -> CComVariant
+    {
+        THROW_HR_IF(E_UNEXPECTED, cursor.done());
+
+        using enum staj_events;
+        const auto &cur = cursor.current();
+        THROW_HR_IF(E_UNEXPECTED, cur.event_type() != uint64_value);
+
+        const auto n = cur.get<uint64_t>();
+        cursor.next();
+        return n;
+    }
+
+    /// @brief Parses the current JSON token as a double and returns the parsed value as a variant.
+    ///
+    /// @param[in,out] cursor A JSON cursor positioned at the current token; it must not be at the end and must
+    /// reference a double value.
+    /// @return A CComVariant containing the parsed value of VT_R8 type.
+    /// @throws wil::ResultException(E_UNEXPECTED) if the cursor is at the end or the current token is not a double
+    /// value.
+    auto ParseDoubleValue(wjson_string_cursor &cursor) const -> CComVariant
+    {
+        THROW_HR_IF(E_UNEXPECTED, cursor.done());
+
+        using enum staj_events;
+        const auto &cur = cursor.current();
+        THROW_HR_IF(E_UNEXPECTED, cur.event_type() != double_value);
+
+        const auto n = cur.get<double>();
+        cursor.next();
+        return n;
+    }
+
+
+protected:
     constexpr auto &GetRootJsonValue() const noexcept
     {
         return this->root_json_value;
