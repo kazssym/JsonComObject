@@ -6,6 +6,7 @@
   <Project Path="JsonComObject.Setup/JsonComObject.Setup.aiproj" Type="840c416c-b8f3-42bc-b0dd-f6bb14c9f8cb" Id="8cf8075e-aba0-4937-ba4c-8fa508f150a8">
     <BuildType Project="DefaultBuild" />
     <Platform Project="?" />
+    <Build Project="false" />
   </Project>
   <Project Path="JsonComObject.Test/JsonComObject.Test.vcxproj" Id="9da4edc5-c599-4612-bd49-134c592e9702" />
   <Project Path="JsonComObject/JsonComObject.vcxproj" />
