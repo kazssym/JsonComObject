@@ -115,12 +115,14 @@ protected:
             cursor.next();
             return bstr;
         }
+#if 0 // byte_string not supported in this implementation
         case byte_string_value: {
             const auto sv = cur.get<byte_string_view>();
             const auto bstr = CComBSTR(gsl::narrow<int>(sv.size()), reinterpret_cast<LPCSTR>(sv.data()));
             cursor.next();
             return bstr;
         }
+#endif
         case null_value:
             return this->ParseNullValue(cursor);
         case bool_value:
