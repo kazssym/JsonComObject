@@ -186,9 +186,9 @@ private:
     /// @brief Parses the current JSON token as an unsigned 64-bit integer and returns the parsed value as a variant.
     ///
     /// @param[in,out] cursor A JSON cursor positioned at the current token; it must not be at the end and must
-    /// reference an uint64 value.
+    /// reference a uint64 value.
     /// @return A CComVariant containing the parsed value of VT_UI8 type.
-    /// @throws wil::ResultException(E_UNEXPECTED) if the cursor is at the end or the current token is not an uint64
+    /// @throws wil::ResultException(E_UNEXPECTED) if the cursor is at the end or the current token is not a uint64
     /// value.
     auto ParseUint64Value(wjson_string_cursor &cursor) const -> CComVariant
     {
