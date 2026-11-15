@@ -116,19 +116,42 @@ protected:
             return bstr;
         }
         case null_value:
-            cursor.next();
-            return VARIANT{VT_NULL};
-        case bool_value: {
-            const auto b = cur.get<bool>();
-            cursor.next();
-            return b;
-        }
+            return this->ParseNullValue(cursor);
+        case bool_value:
+            return this->ParseBoolValue(cursor);
         default:
             THROW_HR_MSG(E_NOTIMPL, "Not implemented yet.");
         }
     }
 
+private:
+    auto ParseNullValue(wjson_string_cursor &cursor) const -> CComVariant
+    {
+        THROW_HR_IF(E_UNEXPECTED, cursor.done());
 
+        using enum staj_events;
+        const auto &cur = cursor.current();
+        THROW_HR_IF(E_UNEXPECTED, cur.event_type() != null_value);
+
+        cursor.next();
+        return VARIANT{VT_NULL};
+    }
+
+    auto ParseBoolValue(wjson_string_cursor &cursor) const -> CComVariant
+    {
+        THROW_HR_IF(E_UNEXPECTED, cursor.done());
+
+        using enum staj_events;
+        const auto &cur = cursor.current();
+        THROW_HR_IF(E_UNEXPECTED, cur.event_type() != bool_value);
+
+        const auto b = cur.get<bool>();
+        cursor.next();
+        return b;
+    }
+
+
+protected:
     constexpr auto &GetRootJsonValue() const noexcept
     {
         return this->root_json_value;
