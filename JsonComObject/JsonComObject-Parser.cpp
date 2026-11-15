@@ -116,7 +116,7 @@ protected:
             return bstr;
         }
 #if 0 // byte_string not supported in this implementation
-        case byte_string_value: {
+		case byte_string_value: {
             const auto sv = cur.get<byte_string_view>();
             const auto bstr = CComBSTR(gsl::narrow<int>(sv.size()), reinterpret_cast<LPCSTR>(sv.data()));
             cursor.next();
@@ -131,6 +131,8 @@ protected:
             return this->ParseInt64Value(cursor);
         case uint64_value:
             return this->ParseUint64Value(cursor);
+        case double_value:
+            return this->ParseDoubleValue(cursor);
         default:
             THROW_HR_MSG(E_NOTIMPL, "Not implemented yet.");
         }
@@ -197,6 +199,26 @@ private:
         THROW_HR_IF(E_UNEXPECTED, cur.event_type() != uint64_value);
 
         const auto n = cur.get<uint64_t>();
+        cursor.next();
+        return n;
+    }
+
+    /// @brief Parses the current JSON token as a double and returns the parsed value as a variant.
+    ///
+    /// @param[in,out] cursor A JSON cursor positioned at the current token; it must not be at the end and must
+    /// reference a double value.
+    /// @return A CComVariant containing the parsed value of VT_R8 type.
+    /// @throws wil::ResultException(E_UNEXPECTED) if the cursor is at the end or the current token is not a double
+    /// value.
+    auto ParseDoubleValue(wjson_string_cursor &cursor) const -> CComVariant
+    {
+        THROW_HR_IF(E_UNEXPECTED, cursor.done());
+
+        using enum staj_events;
+        const auto &cur = cursor.current();
+        THROW_HR_IF(E_UNEXPECTED, cur.event_type() != double_value);
+
+        const auto n = cur.get<double>();
         cursor.next();
         return n;
     }
