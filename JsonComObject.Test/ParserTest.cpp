@@ -27,6 +27,7 @@
 #include <atlconv.h>
 #include <boost/test/unit_test.hpp>
 #include <boost/test/unit_test_suite.hpp>
+#include <gsl/assert>
 #include <string_view>
 #include <strsafe.h>
 #include <wil/result_macros.h>
@@ -50,6 +51,21 @@ struct ParserTestFixture
 
 } // namespace
 
+
+BOOST_FIXTURE_TEST_CASE(ParserInterfaceTest, ParserTestFixture)
+{
+    auto parser = CComPtr<IJsonParser>();
+    BOOST_TEST(SUCCEEDED(parser.CoCreateInstance(CLSID_JsonParser, nullptr)));
+    Ensures(parser != nullptr);
+
+    auto support_error_info = CComPtr<ISupportErrorInfo>();
+    BOOST_TEST(SUCCEEDED(parser.QueryInterface(&support_error_info)));
+    Ensures(support_error_info != nullptr);
+
+    auto agile_object = CComPtr<IAgileObject>();
+    BOOST_TEST(!FAILED(parser.QueryInterface(&agile_object)));
+    Ensures(agile_object != nullptr);
+}
 
 BOOST_FIXTURE_TEST_CASE(ParserTest, ParserTestFixture)
 {
