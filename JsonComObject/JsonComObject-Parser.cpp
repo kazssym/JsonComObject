@@ -34,6 +34,7 @@ module;
 #include <atlcomcli.h>
 #include <atlconv.h>
 #include <atldef.h>
+#include <cstdint>
 #include <exception>
 #include <gsl/narrow>
 #include <jsoncons/basic_json.hpp>
@@ -58,10 +59,12 @@ using jsoncons::staj_events;
 using jsoncons::wjson;
 using jsoncons::wjson_string_cursor;
 using std::exception;
+using std::int64_t;
 using std::move;
 using std::mutex;
 using std::scoped_lock;
 using std::wstring_view;
+using std::uint64_t;
 
 
 export module JsonComObject:Parser;
@@ -119,6 +122,10 @@ protected:
             return this->ParseNullValue(cursor);
         case bool_value:
             return this->ParseBoolValue(cursor);
+        case int64_value:
+            return this->ParseInt64Value(cursor);
+        case uint64_value:
+            return this->ParseUint64Value(cursor);
         default:
             THROW_HR_MSG(E_NOTIMPL, "Not implemented yet.");
         }
@@ -148,6 +155,32 @@ private:
         const auto b = cur.get<bool>();
         cursor.next();
         return b;
+    }
+
+    auto ParseInt64Value(wjson_string_cursor &cursor) const -> CComVariant
+    {
+        THROW_HR_IF(E_UNEXPECTED, cursor.done());
+
+        using enum staj_events;
+        const auto &cur = cursor.current();
+        THROW_HR_IF(E_UNEXPECTED, cur.event_type() != int64_value);
+
+        const auto n = cur.get<int64_t>();
+        cursor.next();
+        return n;
+    }
+
+    auto ParseUint64Value(wjson_string_cursor &cursor) const -> CComVariant
+    {
+        THROW_HR_IF(E_UNEXPECTED, cursor.done());
+
+        using enum staj_events;
+        const auto &cur = cursor.current();
+        THROW_HR_IF(E_UNEXPECTED, cur.event_type() != uint64_value);
+
+        const auto n = cur.get<uint64_t>();
+        cursor.next();
+        return n;
     }
 
 
