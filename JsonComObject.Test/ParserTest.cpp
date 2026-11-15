@@ -55,7 +55,7 @@ struct ParserTestFixture
 BOOST_FIXTURE_TEST_CASE(ParserInterfaceTest, ParserTestFixture)
 {
     auto parser = CComPtr<IJsonParser>();
-    BOOST_TEST(!FAILED(parser.CoCreateInstance(CLSID_JsonParser, nullptr)));
+    BOOST_TEST_REQUIRE(!FAILED(parser.CoCreateInstance(CLSID_JsonParser, nullptr)));
     ATLASSERT(parser != nullptr);
 
     auto support_error_info = CComPtr<ISupportErrorInfo>();
@@ -70,7 +70,7 @@ BOOST_FIXTURE_TEST_CASE(ParserInterfaceTest, ParserTestFixture)
 BOOST_FIXTURE_TEST_CASE(ParseJsonTest, ParserTestFixture)
 {
     auto parser = CComPtr<IJsonParser>();
-    BOOST_TEST(SUCCEEDED(parser.CoCreateInstance(CLSID_JsonParser, nullptr)));
+    BOOST_TEST_REQUIRE(!FAILED(parser.CoCreateInstance(CLSID_JsonParser, nullptr)));
     ATLASSERT(parser != nullptr);
 
     BOOST_TEST(parser->ParseJson(CComBSTR(), nullptr) == E_INVALIDARG);
@@ -79,21 +79,21 @@ BOOST_FIXTURE_TEST_CASE(ParseJsonTest, ParserTestFixture)
     BOOST_TEST(parser->ParseJson(CComBSTR(), &var1) == E_INVALIDARG);
 
     auto var_null = CComVariant();
-    BOOST_TEST(SUCCEEDED(parser->ParseJson(CComBSTR(OLESTR("null")), &var_null)));
+    BOOST_TEST_REQUIRE(!FAILED(parser->ParseJson(CComBSTR(OLESTR("null")), &var_null)));
     BOOST_TEST(V_VT(&var_null) == VT_NULL);
 
     auto var_false = CComVariant();
-    BOOST_TEST(SUCCEEDED(parser->ParseJson(CComBSTR(OLESTR("false")), &var_false)));
+    BOOST_TEST_REQUIRE(!FAILED(parser->ParseJson(CComBSTR(OLESTR("false")), &var_false)));
     BOOST_TEST(V_VT(&var_false) == VT_BOOL);
     BOOST_TEST(V_BOOL(&var_false) == VARIANT_FALSE);
 
     auto var_true = CComVariant();
-    BOOST_TEST(SUCCEEDED(parser->ParseJson(CComBSTR(OLESTR("true")), &var_true)));
+    BOOST_TEST_REQUIRE(!FAILED(parser->ParseJson(CComBSTR(OLESTR("true")), &var_true)));
     BOOST_TEST(V_VT(&var_true) == VT_BOOL);
     BOOST_TEST(V_BOOL(&var_true) == VARIANT_TRUE);
 
     auto var_string = CComVariant();
-    BOOST_TEST(SUCCEEDED(parser->ParseJson(CComBSTR(OLESTR(R"""("hello")""")), &var_string)));
+    BOOST_TEST_REQUIRE(!FAILED(parser->ParseJson(CComBSTR(OLESTR(R"""("hello")""")), &var_string)));
     BOOST_TEST(V_VT(&var_string) == VT_BSTR);
     BOOST_TEST(string_view(CW2A(V_BSTR(&var_string))) == "hello"sv);
 }
