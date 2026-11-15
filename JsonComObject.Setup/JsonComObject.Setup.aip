@@ -46,7 +46,7 @@
     <ATTRIBUTE name="CurrentFeature" value="MainFeature"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFilesComponent">
-    <ROW File="JsonComObject.dll" Component_="JsonComObject_PrimaryOutput" FileName="JSONCO~1.DLL|JsonComObject.dll" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\x64\Release\JsonComObject.dll" SelfReg="true"/>
+    <ROW File="JsonComObject.dll" Component_="JsonComObject_PrimaryOutput" FileName="JSONCO~1.DLL|JsonComObject.dll" Version="65535.65535.65535.65535" Attributes="0" SourcePath="..\x64\Release\JsonComObject.dll" SelfReg="false"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.AiPersistentPropComponent">
     <ROW Property="AI_INSTALLPERUSER" Registry="AI_INSTALLPERUSER" HklmSearch="AI_INSTALLPERUSER" HkcuSearch="AI_INSTALLPERUSER_1" Hklm64Search="AI_INSTALLPERUSER_2" Hkcu64Search="AI_INSTALLPERUSER_3"/>
