@@ -38,8 +38,23 @@
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCompsComponent">
     <ROW Component="AI_INSTALLPERUSER" ComponentId="{A8C8D0A7-E04B-4F0C-91EA-DD0B7A855319}" Directory_="APPDIR" Attributes="260" KeyPath="AI_INSTALLPERUSER" Options="1"/>
     <ROW Component="APPDIR" ComponentId="{4DA20963-9EA5-439A-A84A-0EFC59541373}" Directory_="APPDIR" Attributes="0"/>
+    <ROW Component="DE019FE6BF1649EB852D9EFB239350C0" ComponentId="{626FF89C-4F2C-45E2-A74B-D6CD2D71000D}" Directory_="APPDIR" Attributes="260" KeyPath="DE019FE6BF1649EB852D9EFB239350C0"/>
+    <ROW Component="E1603BED3CF147A19645C4B29BFB464F" ComponentId="{F3783D23-BD15-44A7-B41E-F0EE24E46F65}" Directory_="APPDIR" Attributes="260" KeyPath="E1603BED3CF147A19645C4B29BFB464F"/>
     <ROW Component="JsonComObject_PrimaryOutput" ComponentId="{53A09115-5EA8-489B-8993-3C4CF3DBF652}" Directory_="APPDIR" Attributes="256" KeyPath="JsonComObject.dll"/>
     <ROW Component="ProductInformation" ComponentId="{AC950C47-972D-4AD3-A92F-4D59FD764B47}" Directory_="APPDIR" Attributes="260" KeyPath="Version"/>
+    <ROW Component="ThreadingModel" ComponentId="{D23D183B-96D3-4379-B0DB-BD3A96898255}" Directory_="APPDIR" Attributes="260" KeyPath="ThreadingModel"/>
+    <ROW Component="_" ComponentId="{E3FE0D31-390D-48BF-9A90-2AAE1078CFFD}" Directory_="APPDIR" Attributes="260" KeyPath="_"/>
+    <ROW Component="__1" ComponentId="{3A660577-F161-4D50-800C-0EB401058F94}" Directory_="APPDIR" Attributes="260" KeyPath="__1"/>
+    <ROW Component="__10" ComponentId="{EC033C64-9C00-45DD-AEE0-D1358088200E}" Directory_="APPDIR" Attributes="260" KeyPath="__12"/>
+    <ROW Component="__11" ComponentId="{FF4720A8-CA54-4B3C-93CA-964182D01CB8}" Directory_="APPDIR" Attributes="260" KeyPath="__13"/>
+    <ROW Component="__2" ComponentId="{90711BE7-1066-45F9-AD87-4CC0D5A242AE}" Directory_="APPDIR" Attributes="260" KeyPath="__2"/>
+    <ROW Component="__3" ComponentId="{353B3399-E99E-4BF5-8459-1977D16DEDF9}" Directory_="APPDIR" Attributes="260" KeyPath="__3"/>
+    <ROW Component="__4" ComponentId="{A4A3A6AA-EECA-4F39-BD77-A661EE7C9EF6}" Directory_="APPDIR" Attributes="260" KeyPath="__4"/>
+    <ROW Component="__5" ComponentId="{3A0D147C-8328-4A54-9B2C-F7BF32109B8C}" Directory_="APPDIR" Attributes="260" KeyPath="__5"/>
+    <ROW Component="__6" ComponentId="{D65ED602-D78C-4682-BA47-B66C96C6CA6B}" Directory_="APPDIR" Attributes="260" KeyPath="__6"/>
+    <ROW Component="__7" ComponentId="{914AF6E7-3B74-4778-AB34-B52D7F8A537F}" Directory_="APPDIR" Attributes="260" KeyPath="__7"/>
+    <ROW Component="__8" ComponentId="{CF7CE25E-9824-4348-B465-79B7C03B16D6}" Directory_="APPDIR" Attributes="260" KeyPath="__9"/>
+    <ROW Component="__9" ComponentId="{79A98A6E-BA7D-4F95-9C8E-AF6836554BF7}" Directory_="APPDIR" Attributes="260" KeyPath="__11"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatsComponent">
     <ROW Feature="MainFeature" Title="MainFeature" Description="Description" Display="1" Level="1" Directory_="APPDIR" Attributes="0"/>
@@ -139,6 +154,21 @@
     <ROW Feature_="MainFeature" Component_="ProductInformation"/>
     <ROW Feature_="MainFeature" Component_="JsonComObject_PrimaryOutput"/>
     <ROW Feature_="MainFeature" Component_="AI_INSTALLPERUSER"/>
+    <ROW Feature_="MainFeature" Component_="_"/>
+    <ROW Feature_="MainFeature" Component_="__1"/>
+    <ROW Feature_="MainFeature" Component_="ThreadingModel"/>
+    <ROW Feature_="MainFeature" Component_="__2"/>
+    <ROW Feature_="MainFeature" Component_="__3"/>
+    <ROW Feature_="MainFeature" Component_="__4"/>
+    <ROW Feature_="MainFeature" Component_="__5"/>
+    <ROW Feature_="MainFeature" Component_="__6"/>
+    <ROW Feature_="MainFeature" Component_="__7"/>
+    <ROW Feature_="MainFeature" Component_="E1603BED3CF147A19645C4B29BFB464F"/>
+    <ROW Feature_="MainFeature" Component_="__8"/>
+    <ROW Feature_="MainFeature" Component_="__9"/>
+    <ROW Feature_="MainFeature" Component_="__10"/>
+    <ROW Feature_="MainFeature" Component_="__11"/>
+    <ROW Feature_="MainFeature" Component_="DE019FE6BF1649EB852D9EFB239350C0"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiInstExSeqComponent">
     <ROW Action="AI_DOWNGRADE" Condition="AI_NEWERPRODUCTFOUND AND (UILevel &lt;&gt; 5)" Sequence="210"/>
@@ -176,12 +206,41 @@
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiRegsComponent">
     <ROW Registry="AI_INSTALLPERUSER" Root="-1" Key="Software\[Manufacturer]\[UpgradeCode]" Name="AI_INSTALLPERUSER" Value="[AI_INSTALLPERUSER]" Component_="AI_INSTALLPERUSER"/>
+    <ROW Registry="CLSID" Root="0" Key="CLSID" Name="\"/>
+    <ROW Registry="CLSID_1" Root="0" Key="JsonComObject.JsonParser.1\CLSID" Name="\"/>
+    <ROW Registry="CurVer" Root="0" Key="JsonComObject.JsonParser\CurVer" Name="\"/>
+    <ROW Registry="DE019FE6BF1649EB852D9EFB239350C0" Root="0" Key="CLSID\{DE019FE6-BF16-49EB-852D-9EFB239350C0}" Name="*" Component_="DE019FE6BF1649EB852D9EFB239350C0"/>
+    <ROW Registry="E1603BED3CF147A19645C4B29BFB464F" Root="0" Key="TypeLib\{E1603BED-3CF1-47A1-9645-C4B29BFB464F}" Name="+" Component_="E1603BED3CF147A19645C4B29BFB464F"/>
+    <ROW Registry="FLAGS" Root="0" Key="TypeLib\{E1603BED-3CF1-47A1-9645-C4B29BFB464F}\1.0\FLAGS" Name="\"/>
+    <ROW Registry="HELPDIR" Root="0" Key="TypeLib\{E1603BED-3CF1-47A1-9645-C4B29BFB464F}\1.0\HELPDIR" Name="\"/>
+    <ROW Registry="InprocServer32" Root="0" Key="CLSID\{DE019FE6-BF16-49EB-852D-9EFB239350C0}\InprocServer32" Name="\"/>
+    <ROW Registry="JsonComObject.JsonParser" Root="0" Key="JsonComObject.JsonParser" Name="\"/>
+    <ROW Registry="JsonComObject.JsonParser.1" Root="0" Key="JsonComObject.JsonParser.1" Name="\"/>
     <ROW Registry="Manufacturer" Root="-1" Key="Software\[Manufacturer]" Name="\"/>
     <ROW Registry="Path" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Path" Value="[APPDIR]" Component_="ProductInformation"/>
     <ROW Registry="ProductName" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="\"/>
+    <ROW Registry="ProgID" Root="0" Key="CLSID\{DE019FE6-BF16-49EB-852D-9EFB239350C0}\ProgID" Name="\"/>
     <ROW Registry="Software" Root="-1" Key="Software" Name="\"/>
+    <ROW Registry="ThreadingModel" Root="0" Key="CLSID\{DE019FE6-BF16-49EB-852D-9EFB239350C0}\InprocServer32" Name="ThreadingModel" Value="Both" Component_="ThreadingModel"/>
+    <ROW Registry="TypeLib" Root="0" Key="TypeLib" Name="\"/>
     <ROW Registry="UpgradeCode" Root="-1" Key="Software\[Manufacturer]\[UpgradeCode]" Name="\"/>
     <ROW Registry="Version" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Version" Value="[ProductVersion]" Component_="ProductInformation"/>
+    <ROW Registry="VersionIndependentProgID" Root="0" Key="CLSID\{DE019FE6-BF16-49EB-852D-9EFB239350C0}\VersionIndependentProgID" Name="\"/>
+    <ROW Registry="_" Root="0" Key="CLSID\{DE019FE6-BF16-49EB-852D-9EFB239350C0}" Value="JSON Parser Object 1.0" Component_="_"/>
+    <ROW Registry="__1" Root="0" Key="CLSID\{DE019FE6-BF16-49EB-852D-9EFB239350C0}\InprocServer32" Value="[#JsonComObject.dll]" Component_="__1"/>
+    <ROW Registry="__10" Root="0" Key="TypeLib\{E1603BED-3CF1-47A1-9645-C4B29BFB464F}\1.0\0" Name="\"/>
+    <ROW Registry="__11" Root="0" Key="TypeLib\{E1603BED-3CF1-47A1-9645-C4B29BFB464F}\1.0\0\win64" Value="[#JsonComObject.dll]" Component_="__9"/>
+    <ROW Registry="__12" Root="0" Key="TypeLib\{E1603BED-3CF1-47A1-9645-C4B29BFB464F}\1.0\FLAGS" Value="0" Component_="__10"/>
+    <ROW Registry="__13" Root="0" Key="TypeLib\{E1603BED-3CF1-47A1-9645-C4B29BFB464F}\1.0\HELPDIR" Value="[APPDIR]" Component_="__11"/>
+    <ROW Registry="__2" Root="0" Key="CLSID\{DE019FE6-BF16-49EB-852D-9EFB239350C0}\ProgID" Value="JsonComObject.JsonParser.1" Component_="__2"/>
+    <ROW Registry="__3" Root="0" Key="CLSID\{DE019FE6-BF16-49EB-852D-9EFB239350C0}\VersionIndependentProgID" Value="JsonComObject.JsonParser" Component_="__3"/>
+    <ROW Registry="__4" Root="0" Key="JsonComObject.JsonParser" Value="JSON Parser Object" Component_="__4"/>
+    <ROW Registry="__5" Root="0" Key="JsonComObject.JsonParser\CurVer" Value="JsonComObject.JsonParser.1" Component_="__5"/>
+    <ROW Registry="__6" Root="0" Key="JsonComObject.JsonParser.1" Value="JSON Parser Object 1.0" Component_="__6"/>
+    <ROW Registry="__7" Root="0" Key="JsonComObject.JsonParser.1\CLSID" Value="[\{]DE019FE6-BF16-49EB-852D-9EFB239350C0[\}]" Component_="__7"/>
+    <ROW Registry="__8" Root="0" Key="TypeLib\{E1603BED-3CF1-47A1-9645-C4B29BFB464F}\1.0" Name="\"/>
+    <ROW Registry="__9" Root="0" Key="TypeLib\{E1603BED-3CF1-47A1-9645-C4B29BFB464F}\1.0" Value="JsonComObjectLib" Component_="__8"/>
+    <ROW Registry="win64" Root="0" Key="TypeLib\{E1603BED-3CF1-47A1-9645-C4B29BFB464F}\1.0\0\win64" Name="\"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiThemeComponent">
     <ATTRIBUTE name="UsedTheme" value="classic"/>
