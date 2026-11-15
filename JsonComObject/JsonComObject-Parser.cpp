@@ -34,6 +34,7 @@ module;
 #include <atlcomcli.h>
 #include <atlconv.h>
 #include <atldef.h>
+#include <atlexcept.h>
 #include <exception>
 #include <gsl/narrow>
 #include <jsoncons/basic_json.hpp>
@@ -73,7 +74,8 @@ export class ATL_NO_VTABLE CJsonParser
     : public ATL::CComObjectRootEx<ATL::CComMultiThreadModel>,
       public ATL::CComCoClass<CJsonParser, &CLSID_JsonParser>,
       public ATL::IDispatchImpl<IJsonParser, &IID_IJsonParser, &LIBID_JsonComObjectLib, 1, 0>,
-      public ATL::ISupportErrorInfoImpl<&IID_IJsonParser>
+      public ATL::ISupportErrorInfoImpl<&IID_IJsonParser>,
+      public IAgileObject
 {
     using Base = ATL::CComObjectRootEx<ATL::CComMultiThreadModel>;
 
@@ -81,6 +83,7 @@ export class ATL_NO_VTABLE CJsonParser
         COM_INTERFACE_ENTRY(IJsonParser)
         COM_INTERFACE_ENTRY(IDispatch)
         COM_INTERFACE_ENTRY(ISupportErrorInfo)
+        COM_INTERFACE_ENTRY(IAgileObject)
     END_COM_MAP()
 
     DECLARE_PROTECT_FINAL_CONSTRUCT()
