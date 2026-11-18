@@ -93,12 +93,13 @@ export class ATL_NO_VTABLE CJsonParser
     DECLARE_OBJECT_DESCRIPTION("JSON Parser Object 1.0")
     DECLARE_REGISTRY_RESOURCEID(IDR_JSONPARSER)
 
-  public:
+public:
     CJsonParser() = default;
 
+protected:
     virtual ~CJsonParser() noexcept = default;
 
-protected:
+
     auto ParseJsonValue(wjson_string_cursor &cursor) const -> CComVariant
     {
         if (cursor.done())
