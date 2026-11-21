@@ -269,7 +269,7 @@ private:
         THROW_IF_FAILED(CJsonArray::CreateInstance(nullptr, &array));
         // TODO: Implement the logic to populate the array with items from the vector.
 
-        return static_cast<IDispatch *>(array);
+        return CComVariant(array);
     }
 
 
