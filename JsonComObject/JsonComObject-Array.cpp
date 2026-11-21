@@ -108,6 +108,7 @@ public:
 
     auto get__NewEnum(IEnumVARIANT **result) -> HRESULT override
     {
+        // TODO: Implement this method to return an enumerator for the array items.
         return E_NOTIMPL;
     }
 
