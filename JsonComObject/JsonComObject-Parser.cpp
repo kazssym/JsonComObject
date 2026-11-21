@@ -47,6 +47,7 @@ module;
 #include <string_view>
 #include <strsafe.h>
 #include <utility>
+#include <vector>
 #include <wil/result_macros.h>
 
 using ATL::CA2W;
@@ -66,9 +67,12 @@ using std::mutex;
 using std::scoped_lock;
 using std::wstring_view;
 using std::uint64_t;
+using std::vector;
 
 
 export module JsonComObject:Parser;
+
+import :Array;
 
 namespace JsonComObject
 {
@@ -249,13 +253,24 @@ private:
         THROW_HR_IF(E_UNEXPECTED, cursor.done());
 
         using enum staj_events;
-        const auto &cur = cursor.current();
-        THROW_HR_IF(E_UNEXPECTED, cur.event_type() != begin_array);
+        THROW_HR_IF(E_UNEXPECTED, cursor.current().event_type() != begin_array);
 
         cursor.next();
-        // TODO: Implement array parsing logic here
+        THROW_HR_IF(E_FAIL, cursor.done());
 
-        return CComVariant(); // Placeholder for array parsing logic
+        auto items =vector<CComVariant>();
+        while (cursor.current().event_type() != end_array)
+        {
+            items.push_back(this->ParseJsonValue(cursor));
+            THROW_HR_IF(E_FAIL, cursor.done());
+        }
+        cursor.next();
+
+        auto array = CComPtr<IJsonArray>();
+        THROW_IF_FAILED(CJsonArray::CreateInstance(nullptr, &array));
+        // TODO: Implement the logic to populate the array with items from the vector.
+
+        return array.Detach();
     }
 
 
