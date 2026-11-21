@@ -111,10 +111,7 @@ protected:
         switch (const auto &cur = cursor.current(); cur.event_type())
         {
         case string_value: {
-            const auto sv = cur.get<wstring_view>();
-            const auto bstr = CComBSTR(gsl::narrow<int>(sv.size()), sv.data());
-            cursor.next();
-            return bstr;
+            return this->ParseStringValue(cursor);
         }
 #if 0 // byte_string not supported in this implementation
 		case byte_string_value: {
@@ -140,6 +137,27 @@ protected:
     }
 
 private:
+    /// @brief Parses the current JSON token as a string and returns the parsed value as a variant.
+    ///
+    /// @param[in,out] cursor A JSON cursor positioned at the current token; it must not be at the end and must
+    /// reference a string value.
+    /// @return A CComVariant containing the parsed value of VT_BSTR type.
+    /// @throws wil::ResultException(E_UNEXPECTED) if the cursor is at the end or the current token is not a string
+    /// value.
+    auto ParseStringValue(wjson_string_cursor &cursor) const -> CComVariant
+    {
+        THROW_HR_IF(E_UNEXPECTED, cursor.done());
+
+        using enum staj_events;
+        const auto &cur = cursor.current();
+        THROW_HR_IF(E_UNEXPECTED, cur.event_type() != string_value);
+
+        const auto sv = cur.get<wstring_view>();
+        const auto bstr = CComBSTR(gsl::narrow<int>(sv.size()), sv.data());
+        cursor.next();
+        return bstr;
+    }
+
     auto ParseNullValue(wjson_string_cursor &cursor) const -> CComVariant
     {
         THROW_HR_IF(E_UNEXPECTED, cursor.done());
