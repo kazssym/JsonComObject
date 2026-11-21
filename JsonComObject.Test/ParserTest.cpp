@@ -144,6 +144,12 @@ BOOST_FIXTURE_TEST_CASE(ParseJsonArrayTest, ParserTestFixture)
     BOOST_TEST(!FAILED(json_array1->get_Count(&count1)));
     BOOST_TEST(count1 == 3);
 
+    auto item1 = CComVariant();
+    BOOST_TEST(!FAILED(json_array1->get_Item(0, &item1)));
+    THROW_IF_FAILED(item1.ChangeType(VT_I8));
+    BOOST_TEST(V_VT(&item1) == VT_I8);
+    BOOST_TEST(V_I8(&item1) == 1);
+
     auto var_array2 = CComVariant();
     BOOST_TEST_REQUIRE(!FAILED(parser->ParseJson(CComBSTR(OLESTR(R"([[], []])")), &var_array2)));
     BOOST_TEST_REQUIRE(V_VT(&var_array2) == VT_DISPATCH);
