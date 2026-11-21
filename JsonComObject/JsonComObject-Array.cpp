@@ -27,15 +27,25 @@ module;
 
 #include "JsonComObject_i.h"
 #include <Windows.h>
+#include <algorithm>
 #include <atlbase.h>
 #include <atlcom.h>
+#include <atlcomcli.h>
 #include <atldef.h>
+#include <gsl/narrow>
+#include <strsafe.h>
+#include <utility>
+#include <vector>
+#include <wil/result_macros.h>
 
 using ATL::CComCoClass;
 using ATL::CComMultiThreadModel;
 using ATL::CComObjectRootEx;
+using ATL::CComVariant;
 using ATL::IDispatchImpl;
 using ATL::ISupportErrorInfoImpl;
+using std::move;
+using std::vector;
 
 
 export module JsonComObject:Array;
@@ -70,20 +80,45 @@ protected:
     virtual ~CJsonArray() noexcept = default;
 
 public:
-  auto get_Item(LONG pos, VARIANT *result) -> HRESULT override
-  {
-      return E_NOTIMPL;
-  }
+    constexpr auto &GetItems() const noexcept
+    {
+        return this->items;
+    }
 
-  auto get__NewEnum(IEnumVARIANT **result) -> HRESULT override
-  {
-      return E_NOTIMPL;
-  }
+    constexpr void SetItems(vector<CComVariant> new_items) noexcept
+    {
+        this->items = move(new_items);
+    }
 
-  auto  get_Count(LONG *result) -> HRESULT override
-  {
-      return E_NOTIMPL;
-  }
+private:
+    vector<CComVariant> items;
+
+
+public:
+    auto get_Item(LONG pos, VARIANT *result) -> HRESULT override
+    {
+        return E_NOTIMPL;
+    }
+
+    auto get__NewEnum(IEnumVARIANT **result) -> HRESULT override
+    {
+        return E_NOTIMPL;
+    }
+
+    auto get_Count(LONG *const result) -> HRESULT override
+    {
+        RETURN_HR_IF_NULL(E_INVALIDARG, result);
+
+        try
+        {
+            *result = gsl::narrow<LONG>(this->items.size());
+            return S_OK;
+        }
+        catch (const gsl::narrowing_error &)
+        {
+            RETURN_HR(DISP_E_OVERFLOW);
+        }
+    }
 };
 
 } // namespace JsonComObject
