@@ -95,7 +95,6 @@
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <SDLCheck>true</SDLCheck>
@@ -128,7 +127,6 @@
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <SDLCheck>true</SDLCheck>
@@ -163,7 +161,6 @@
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_WINDOWS;_DEBUG;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <SDLCheck>true</SDLCheck>
@@ -196,7 +193,6 @@
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <Optimization>MaxSpeed</Optimization>
       <PreprocessorDefinitions>_WINDOWS;NDEBUG;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <SDLCheck>true</SDLCheck>
@@ -245,6 +241,12 @@
       </PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="JsonComObject-Array.cpp">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsCppModuleInternalPartition</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsCppModuleInternalPartition</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCppModuleInternalPartition</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCppModuleInternalPartition</CompileAs>
     </ClCompile>
     <ClCompile Include="JsonComObject-Parser.cpp">
       <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsCppModuleInternalPartition</CompileAs>

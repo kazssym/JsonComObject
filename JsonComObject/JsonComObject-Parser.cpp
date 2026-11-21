@@ -47,6 +47,7 @@ module;
 #include <string_view>
 #include <strsafe.h>
 #include <utility>
+#include <vector>
 #include <wil/result_macros.h>
 
 using ATL::CA2W;
@@ -66,9 +67,12 @@ using std::mutex;
 using std::scoped_lock;
 using std::wstring_view;
 using std::uint64_t;
+using std::vector;
 
 
 export module JsonComObject:Parser;
+
+import :Array;
 
 namespace JsonComObject
 {
@@ -93,12 +97,13 @@ export class ATL_NO_VTABLE CJsonParser
     DECLARE_OBJECT_DESCRIPTION("JSON Parser Object 1.0")
     DECLARE_REGISTRY_RESOURCEID(IDR_JSONPARSER)
 
-  public:
+public:
     CJsonParser() = default;
 
+protected:
     virtual ~CJsonParser() noexcept = default;
 
-protected:
+
     auto ParseJsonValue(wjson_string_cursor &cursor) const -> CComVariant
     {
         if (cursor.done())
@@ -110,10 +115,7 @@ protected:
         switch (const auto &cur = cursor.current(); cur.event_type())
         {
         case string_value: {
-            const auto sv = cur.get<wstring_view>();
-            const auto bstr = CComBSTR(gsl::narrow<int>(sv.size()), sv.data());
-            cursor.next();
-            return bstr;
+            return this->ParseStringValue(cursor);
         }
 #if 0 // byte_string not supported in this implementation
 		case byte_string_value: {
@@ -133,12 +135,35 @@ protected:
             return this->ParseUint64Value(cursor);
         case double_value:
             return this->ParseDoubleValue(cursor);
+        case begin_array:
+            return this->ParseArray(cursor);
         default:
             THROW_HR_MSG(E_NOTIMPL, "Not implemented yet.");
         }
     }
 
 private:
+    /// @brief Parses the current JSON token as a string and returns the parsed value as a variant.
+    ///
+    /// @param[in,out] cursor A JSON cursor positioned at the current token; it must not be at the end and must
+    /// reference a string value.
+    /// @return A CComVariant containing the parsed value of VT_BSTR type.
+    /// @throws wil::ResultException(E_UNEXPECTED) if the cursor is at the end or the current token is not a string
+    /// value.
+    auto ParseStringValue(wjson_string_cursor &cursor) const -> CComVariant
+    {
+        THROW_HR_IF(E_UNEXPECTED, cursor.done());
+
+        using enum staj_events;
+        const auto &cur = cursor.current();
+        THROW_HR_IF(E_UNEXPECTED, cur.event_type() != string_value);
+
+        const auto sv = cur.get<wstring_view>();
+        const auto bstr = CComBSTR(gsl::narrow<int>(sv.size()), sv.data());
+        cursor.next();
+        return bstr;
+    }
+
     auto ParseNullValue(wjson_string_cursor &cursor) const -> CComVariant
     {
         THROW_HR_IF(E_UNEXPECTED, cursor.done());
@@ -221,6 +246,31 @@ private:
         const auto n = cur.get<double>();
         cursor.next();
         return n;
+    }
+
+    auto ParseArray(wjson_string_cursor &cursor) const -> CComVariant
+    {
+        THROW_HR_IF(E_UNEXPECTED, cursor.done());
+
+        using enum staj_events;
+        THROW_HR_IF(E_UNEXPECTED, cursor.current().event_type() != begin_array);
+
+        cursor.next();
+        THROW_HR_IF(E_FAIL, cursor.done());
+
+        auto items =vector<CComVariant>();
+        while (cursor.current().event_type() != end_array)
+        {
+            items.push_back(this->ParseJsonValue(cursor));
+            THROW_HR_IF(E_FAIL, cursor.done());
+        }
+        cursor.next();
+
+        auto array = CComPtr<IJsonArray>();
+        THROW_IF_FAILED(CJsonArray::CreateInstance(nullptr, &array));
+        // TODO: Implement the logic to populate the array with items from the vector.
+
+        return static_cast<IDispatch *>(array);
     }
 
 
