@@ -140,6 +140,10 @@ BOOST_FIXTURE_TEST_CASE(ParseJsonArrayTest, ParserTestFixture)
     CComPtr<IJsonArray> json_array1;
     BOOST_TEST_REQUIRE(!FAILED(V_DISPATCH(&var_array1)->QueryInterface(&json_array1)));
 
+    auto count1 = LONG();
+    BOOST_TEST(!FAILED(json_array1->get_Count(&count1)));
+    BOOST_TEST(count1 == 3);
+
     auto var_array2 = CComVariant();
     BOOST_TEST_REQUIRE(!FAILED(parser->ParseJson(CComBSTR(OLESTR(R"([[], []])")), &var_array2)));
     BOOST_TEST_REQUIRE(V_VT(&var_array2) == VT_DISPATCH);
