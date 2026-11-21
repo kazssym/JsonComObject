@@ -134,11 +134,21 @@ BOOST_FIXTURE_TEST_CASE(ParseJsonArrayTest, ParserTestFixture)
     ATLASSERT(parser != nullptr);
 
     auto var_array1 = CComVariant();
-    BOOST_TEST_REQUIRE(!FAILED(parser->ParseJson(CComBSTR(OLESTR(R"""([1, 2, 3])""")), &var_array1)));
+    BOOST_TEST_REQUIRE(!FAILED(parser->ParseJson(CComBSTR(OLESTR(R"([1, 2, 3])")), &var_array1)));
     BOOST_TEST_REQUIRE(V_VT(&var_array1) == VT_DISPATCH);
 
     CComPtr<IJsonArray> json_array1;
     BOOST_TEST_REQUIRE(!FAILED(V_DISPATCH(&var_array1)->QueryInterface(&json_array1)));
+
+    auto var_array2 = CComVariant();
+    BOOST_TEST_REQUIRE(!FAILED(parser->ParseJson(CComBSTR(OLESTR(R"([[], []])")), &var_array2)));
+    BOOST_TEST_REQUIRE(V_VT(&var_array2) == VT_DISPATCH);
+
+    auto var_array3 = CComVariant();
+    BOOST_TEST(parser->ParseJson(CComBSTR(OLESTR(R"([)")), &var_array3) == DISP_E_EXCEPTION);
+
+    auto var_array4 = CComVariant();
+    BOOST_TEST(parser->ParseJson(CComBSTR(OLESTR(R"(])")), &var_array4) == DISP_E_EXCEPTION);
 }
 
 } // namespace JsonComObject
