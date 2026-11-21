@@ -277,6 +277,7 @@
     <ResourceCompile Include="JsonComObject.rc" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="cpp.hint" />
     <None Include="JsonComObject.def" />
     <None Include="res\JsonComObject.rgs" />
     <None Include="res\JsonParser.rgs" />
