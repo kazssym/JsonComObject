@@ -60,7 +60,7 @@ using jsoncons::json_exception;
 using jsoncons::staj_events;
 using jsoncons::wjson;
 using jsoncons::wjson_string_cursor;
-using std::exception;
+using std::bad_alloc;
 using std::int64_t;
 using std::move;
 using std::mutex;
@@ -329,13 +329,13 @@ public:
         {
             return ex.GetErrorCode();
         }
-        catch (const gsl::narrowing_error &)
+        catch (const bad_alloc &)
         {
-            RETURN_HR(DISP_E_OVERFLOW);
+            RETURN_HR(E_OUTOFMEMORY);
         }
-        catch (const exception &ex)
+        catch (...)                            
         {
-            RETURN_HR_MSG(E_UNEXPECTED, "%hs", ex.what());
+            RETURN_HR(E_UNEXPECTED);
         }
     }
 };
