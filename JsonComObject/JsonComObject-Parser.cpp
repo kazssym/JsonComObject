@@ -267,7 +267,10 @@ private:
 
         auto array = CComPtr<IJsonArray>();
         THROW_IF_FAILED(CJsonArray::CreateInstance(nullptr, &array));
-        // TODO: Implement the logic to populate the array with items from the vector.
+
+        const auto &com_array = dynamic_cast<CJsonArray *>(static_cast<IJsonArray *>(array));
+        THROW_HR_IF_NULL(E_UNEXPECTED, com_array);
+        com_array->SetItems(move(items));
 
         return CComVariant(array);
     }
