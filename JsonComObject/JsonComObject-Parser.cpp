@@ -114,11 +114,10 @@ protected:
         using enum staj_events;
         switch (const auto &cur = cursor.current(); cur.event_type())
         {
-        case string_value: {
+        case string_value:
             return this->ParseStringValue(cursor);
-        }
 #if 0 // byte_string not supported in this implementation
-		case byte_string_value: {
+        case byte_string_value: {
             const auto sv = cur.get<byte_string_view>();
             const auto bstr = CComBSTR(gsl::narrow<int>(sv.size()), reinterpret_cast<LPCSTR>(sv.data()));
             cursor.next();
