@@ -131,6 +131,8 @@ protected:
             return this->ParseUint64Value(cursor);
         case double_value:
             return this->ParseDoubleValue(cursor);
+        case begin_array:
+            return this->ParseArray(cursor);
         default:
             THROW_HR_MSG(E_NOTIMPL, "Not implemented yet.");
         }
@@ -240,6 +242,20 @@ private:
         const auto n = cur.get<double>();
         cursor.next();
         return n;
+    }
+
+    auto ParseArray(wjson_string_cursor &cursor) const -> CComVariant
+    {
+        THROW_HR_IF(E_UNEXPECTED, cursor.done());
+
+        using enum staj_events;
+        const auto &cur = cursor.current();
+        THROW_HR_IF(E_UNEXPECTED, cur.event_type() != begin_array);
+
+        cursor.next();
+        // TODO: Implement array parsing logic here
+
+        return CComVariant(); // Placeholder for array parsing logic
     }
 
 
