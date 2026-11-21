@@ -273,38 +273,19 @@ private:
     }
 
 
-protected:
-    constexpr auto &GetRootJsonValue() const noexcept
-    {
-        return this->root_json_value;
-    }
-
-    void SetRootJsonValue(CComVariant json_value)
-    {
-        auto v = VARIANT{};
-        THROW_IF_FAILED(json_value.Detach(&v));
-        THROW_IF_FAILED(this->root_json_value.Attach(&v));
-    }
-
-private:
-    CComVariant root_json_value;
-    mutex root_json_value_mutex;
-
 public:
     auto ParseJson(const BSTR json_str, VARIANT *const result) noexcept -> HRESULT override
     {
         RETURN_HR_IF_NULL(E_INVALIDARG, result);
         RETURN_HR_IF_NULL(E_INVALIDARG, json_str);
 
-        auto lock = scoped_lock(this->root_json_value_mutex);
         try
         {
             auto cursor = wjson_string_cursor(json_str);
-            this->SetRootJsonValue(this->ParseJsonValue(cursor));
+            auto root_value = this->ParseJsonValue(cursor);
 
             ::VariantInit(result);
-            RETURN_IF_FAILED(::VariantCopy(result, &this->GetRootJsonValue()));
-
+            RETURN_IF_FAILED(root_value.Detach(result));
             return S_OK;
         }
         catch (const json_exception &ex)
