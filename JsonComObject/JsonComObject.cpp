@@ -33,6 +33,7 @@ module;
 
 export module JsonComObject;
 
+export import :Array;
 export import :Parser;
 
 namespace JsonComObject
