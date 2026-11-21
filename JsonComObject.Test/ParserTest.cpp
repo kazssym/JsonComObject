@@ -91,11 +91,18 @@ BOOST_FIXTURE_TEST_CASE(ParseJsonTest, ParserTestFixture)
     BOOST_TEST_REQUIRE(!FAILED(parser->ParseJson(CComBSTR(OLESTR("true")), &var_true)));
     BOOST_TEST(V_VT(&var_true) == VT_BOOL);
     BOOST_TEST(V_BOOL(&var_true) == VARIANT_TRUE);
+}
 
-    auto var_string = CComVariant();
-    BOOST_TEST_REQUIRE(!FAILED(parser->ParseJson(CComBSTR(OLESTR(R"""("hello")""")), &var_string)));
-    BOOST_TEST(V_VT(&var_string) == VT_BSTR);
-    BOOST_TEST(string_view(CW2A(V_BSTR(&var_string))) == "hello"sv);
+BOOST_FIXTURE_TEST_CASE(ParseJsonStringTest, ParserTestFixture)
+{
+    auto parser = CComPtr<IJsonParser>();
+    BOOST_TEST_REQUIRE(!FAILED(parser.CoCreateInstance(CLSID_JsonParser, nullptr)));
+    ATLASSERT(parser != nullptr);
+
+    auto var_string1 = CComVariant();
+    BOOST_TEST_REQUIRE(!FAILED(parser->ParseJson(CComBSTR(OLESTR(R"""("hello")""")), &var_string1)));
+    BOOST_TEST(V_VT(&var_string1) == VT_BSTR);
+    BOOST_TEST(string_view(CW2A(V_BSTR(&var_string1))) == "hello"sv);
 }
 
 BOOST_FIXTURE_TEST_CASE(ParseJsonNumberTest, ParserTestFixture)
