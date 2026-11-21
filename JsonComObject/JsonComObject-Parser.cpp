@@ -160,7 +160,7 @@ private:
         const auto sv = cur.get<wstring_view>();
         const auto bstr = CComBSTR(gsl::narrow<int>(sv.size()), sv.data());
         cursor.next();
-        return bstr;
+        return CComVariant(bstr);
     }
 
     auto ParseNullValue(wjson_string_cursor &cursor) const -> CComVariant
@@ -172,7 +172,7 @@ private:
         THROW_HR_IF(E_UNEXPECTED, cur.event_type() != null_value);
 
         cursor.next();
-        return VARIANT{VT_NULL};
+        return CComVariant(VARIANT{VT_NULL});
     }
 
     auto ParseBoolValue(wjson_string_cursor &cursor) const -> CComVariant
@@ -185,7 +185,7 @@ private:
 
         const auto b = cur.get<bool>();
         cursor.next();
-        return b;
+        return CComVariant(b);
     }
 
     /// @brief Parses the current JSON token as a signed 64-bit integer and returns the parsed value as a variant.
@@ -204,7 +204,7 @@ private:
 
         const auto n = cur.get<int64_t>();
         cursor.next();
-        return n;
+        return CComVariant(n);
     }
 
     /// @brief Parses the current JSON token as an unsigned 64-bit integer and returns the parsed value as a variant.
@@ -224,7 +224,7 @@ private:
 
         const auto n = cur.get<uint64_t>();
         cursor.next();
-        return n;
+        return CComVariant(n);
     }
 
     /// @brief Parses the current JSON token as a double and returns the parsed value as a variant.
@@ -244,7 +244,7 @@ private:
 
         const auto n = cur.get<double>();
         cursor.next();
-        return n;
+        return CComVariant(n);
     }
 
     auto ParseArray(wjson_string_cursor &cursor) const -> CComVariant
