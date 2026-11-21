@@ -45,6 +45,7 @@ using ATL::CComVariant;
 using ATL::IDispatchImpl;
 using ATL::ISupportErrorInfoImpl;
 using std::move;
+using std::size_t;
 using std::vector;
 
 
@@ -95,9 +96,14 @@ private:
 
 
 public:
-    auto get_Item(LONG pos, VARIANT *result) -> HRESULT override
+    auto get_Item(const LONG pos, VARIANT *const result) -> HRESULT override
     {
-        return E_NOTIMPL;
+        RETURN_HR_IF(E_INVALIDARG, !(pos >= 0 && static_cast<size_t>(pos) < this->items.size()));
+        RETURN_HR_IF_NULL(E_INVALIDARG, result);
+
+        ::VariantInit(result);
+        RETURN_IF_FAILED(::VariantCopy(result, &this->GetItems()[pos]));
+        return S_OK;
     }
 
     auto get__NewEnum(IEnumVARIANT **result) -> HRESULT override
