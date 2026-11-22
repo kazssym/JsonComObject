@@ -1,4 +1,4 @@
-// JsonComObject-Parser.cpp -
+// JsonComObject-Array.cpp -
 // Copyright © 2026 Kaz Nishimura
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -33,6 +33,7 @@ module;
 #include <atlcomcli.h>
 #include <atldef.h>
 #include <gsl/narrow>
+#include <mutex>
 #include <strsafe.h>
 #include <utility>
 #include <vector>
@@ -48,6 +49,8 @@ using ATL::IEnumOnSTLImpl;
 using ATL::ISupportErrorInfoImpl;
 using ATL::_Copy;
 using std::move;
+using std::mutex;
+using std::scoped_lock;
 using std::size_t;
 using std::vector;
 
@@ -84,7 +87,7 @@ export class ATL_NO_VTABLE CJsonArray
     : public CComObjectRootEx<CComMultiThreadModel>,
       public CComCoClass<CJsonArray>,
       public IDispatchImpl<IJsonArray, &IID_IJsonArray, &LIBID_JsonComObjectLib, 1, 0>,
-      public ISupportErrorInfoImpl<&IID_IJsonParser>,
+      public ISupportErrorInfoImpl<&IID_IJsonArray>,
       public IAgileObject
 {
     using Base = CComObjectRootEx<CComMultiThreadModel>;
@@ -107,6 +110,16 @@ protected:
     virtual ~CJsonArray() noexcept = default;
 
 public:
+    constexpr auto &GetObjectMutex() & noexcept
+    {
+        return this->object_mutex;
+    }
+
+private:
+    mutex object_mutex;
+
+
+public:
     constexpr auto &GetItems() const & noexcept
     {
         return this->items;
@@ -114,6 +127,7 @@ public:
 
     constexpr void SetItems(vector<CComVariant> new_items) noexcept
     {
+        auto lock = scoped_lock(this->GetObjectMutex());
         this->items = move(new_items);
     }
 
@@ -130,6 +144,7 @@ private:
 public:
     auto get_Item(const LONG pos, VARIANT *const result) -> HRESULT override
     {
+        auto lock = scoped_lock(this->GetObjectMutex());
         RETURN_HR_IF(E_INVALIDARG, !(pos >= 0 && static_cast<size_t>(pos) < this->items.size()));
         RETURN_HR_IF_NULL(E_INVALIDARG, result);
 
@@ -140,6 +155,7 @@ public:
 
     auto get__NewEnum(IEnumVARIANT **const result) -> HRESULT override
     {
+        auto lock = scoped_lock(this->GetObjectMutex());
         RETURN_HR_IF_NULL(E_INVALIDARG, result);
         
         auto enumerator = CComPtr<IEnumVARIANT>();
@@ -155,6 +171,7 @@ public:
 
     auto get_Count(LONG *const result) -> HRESULT override
     {
+        auto lock = scoped_lock(this->GetObjectMutex());
         RETURN_HR_IF_NULL(E_INVALIDARG, result);
 
         try
@@ -164,7 +181,7 @@ public:
         }
         catch (const gsl::narrowing_error &)
         {
-            RETURN_HR(DISP_E_OVERFLOW);
+            RETURN_HR(E_UNEXPECTED);
         }
     }
 };

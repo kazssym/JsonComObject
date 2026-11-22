@@ -61,6 +61,7 @@ using jsoncons::staj_events;
 using jsoncons::wjson;
 using jsoncons::wjson_string_cursor;
 using std::bad_alloc;
+using std::exception;
 using std::int64_t;
 using std::move;
 using std::mutex;
@@ -317,7 +318,11 @@ public:
         {
             RETURN_HR(E_OUTOFMEMORY);
         }
-        catch (...)                            
+        catch (const exception &ex)
+        {
+            RETURN_HR_MSG(E_UNEXPECTED, "%hs", ex.what());
+        }
+        catch (...)
         {
             RETURN_HR(E_UNEXPECTED);
         }
