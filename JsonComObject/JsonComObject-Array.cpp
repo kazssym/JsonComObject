@@ -41,9 +41,12 @@ module;
 using ATL::CComCoClass;
 using ATL::CComMultiThreadModel;
 using ATL::CComObjectRootEx;
+using ATL::CComPtr;
 using ATL::CComVariant;
 using ATL::IDispatchImpl;
+using ATL::IEnumOnSTLImpl;
 using ATL::ISupportErrorInfoImpl;
+using ATL::_Copy;
 using std::move;
 using std::size_t;
 using std::vector;
@@ -53,6 +56,29 @@ export module JsonComObject:Array;
 
 namespace JsonComObject
 {
+
+export class ATL_NO_VTABLE CJsonArrayEnumerator
+    : public CComObjectRootEx<CComMultiThreadModel>,
+      public CComCoClass<CJsonArrayEnumerator>,
+      public IEnumOnSTLImpl<IEnumVARIANT, &IID_IEnumVARIANT, VARIANT, _Copy<VARIANT>, vector<CComVariant>>,
+      public IAgileObject
+{
+    using Base = CComObjectRootEx<CComMultiThreadModel>;
+    BEGIN_COM_MAP(CJsonArrayEnumerator)
+        COM_INTERFACE_ENTRY(IEnumVARIANT)
+        COM_INTERFACE_ENTRY(IAgileObject)
+    END_COM_MAP()
+
+    DECLARE_PROTECT_FINAL_CONSTRUCT()
+    DECLARE_OBJECT_DESCRIPTION("JSON Array Object 1.0")
+    DECLARE_NO_REGISTRY()
+
+public:
+    CJsonArrayEnumerator() = default;
+
+protected:
+    virtual ~CJsonArrayEnumerator() noexcept = default;
+};
 
 export class ATL_NO_VTABLE CJsonArray
     : public CComObjectRootEx<CComMultiThreadModel>,
@@ -81,7 +107,7 @@ protected:
     virtual ~CJsonArray() noexcept = default;
 
 public:
-    constexpr auto &GetItems() const noexcept
+    constexpr auto &GetItems() const & noexcept
     {
         return this->items;
     }
@@ -89,6 +115,12 @@ public:
     constexpr void SetItems(vector<CComVariant> new_items) noexcept
     {
         this->items = move(new_items);
+    }
+
+protected:
+    constexpr auto &GetMutableItems() & noexcept
+    {
+        return this->items;
     }
 
 private:
@@ -106,10 +138,19 @@ public:
         return S_OK;
     }
 
-    auto get__NewEnum(IEnumVARIANT **result) -> HRESULT override
+    auto get__NewEnum(IEnumVARIANT **const result) -> HRESULT override
     {
-        // TODO: Implement this method to return an enumerator for the array items.
-        return E_NOTIMPL;
+        RETURN_HR_IF_NULL(E_INVALIDARG, result);
+        
+        auto enumerator = CComPtr<IEnumVARIANT>();
+        RETURN_IF_FAILED(CJsonArrayEnumerator::CreateInstance(nullptr, &enumerator));
+
+        const auto &com_enumerator = dynamic_cast<CJsonArrayEnumerator *>(static_cast<IEnumVARIANT *>(enumerator));
+        RETURN_HR_IF_NULL(E_UNEXPECTED, com_enumerator);
+        RETURN_IF_FAILED(com_enumerator->Init(this->GetUnknown(), this->GetMutableItems()));
+
+        *result = enumerator.Detach();
+        return S_OK;
     }
 
     auto get_Count(LONG *const result) -> HRESULT override
