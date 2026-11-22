@@ -144,10 +144,10 @@ private:
 public:
     auto get_Item(const LONG pos, VARIANT *const result) -> HRESULT override
     {
+        auto lock = scoped_lock(this->GetObjectMutex());
         RETURN_HR_IF(E_INVALIDARG, !(pos >= 0 && static_cast<size_t>(pos) < this->items.size()));
         RETURN_HR_IF_NULL(E_INVALIDARG, result);
 
-        auto lock = scoped_lock(this->GetObjectMutex());
         ::VariantInit(result);
         RETURN_IF_FAILED(::VariantCopy(result, &this->GetItems()[pos]));
         return S_OK;
@@ -155,6 +155,7 @@ public:
 
     auto get__NewEnum(IEnumVARIANT **const result) -> HRESULT override
     {
+        auto lock = scoped_lock(this->GetObjectMutex());
         RETURN_HR_IF_NULL(E_INVALIDARG, result);
         
         auto enumerator = CComPtr<IEnumVARIANT>();
@@ -162,8 +163,6 @@ public:
 
         const auto &com_enumerator = dynamic_cast<CJsonArrayEnumerator *>(static_cast<IEnumVARIANT *>(enumerator));
         RETURN_HR_IF_NULL(E_UNEXPECTED, com_enumerator);
-
-        auto lock = scoped_lock(this->GetObjectMutex());
         RETURN_IF_FAILED(com_enumerator->Init(this->GetUnknown(), this->GetMutableItems()));
 
         *result = enumerator.Detach();
@@ -172,11 +171,11 @@ public:
 
     auto get_Count(LONG *const result) -> HRESULT override
     {
+        auto lock = scoped_lock(this->GetObjectMutex());
         RETURN_HR_IF_NULL(E_INVALIDARG, result);
 
         try
         {
-            auto lock = scoped_lock(this->GetObjectMutex());
             *result = gsl::narrow<LONG>(this->items.size());
             return S_OK;
         }
