@@ -146,7 +146,7 @@ public:
     {
         auto lock = scoped_lock(this->GetObjectMutex());
         RETURN_HR_IF(E_INVALIDARG, !(pos >= 0 && static_cast<size_t>(pos) < this->items.size()));
-        RETURN_HR_IF_NULL(E_INVALIDARG, result);
+        RETURN_HR_IF_NULL(E_POINTER, result);
 
         ::VariantInit(result);
         RETURN_IF_FAILED(::VariantCopy(result, &this->GetItems()[pos]));
@@ -156,7 +156,7 @@ public:
     auto get__NewEnum(IEnumVARIANT **const result) -> HRESULT override
     {
         auto lock = scoped_lock(this->GetObjectMutex());
-        RETURN_HR_IF_NULL(E_INVALIDARG, result);
+        RETURN_HR_IF_NULL(E_POINTER, result);
         
         auto enumerator = CComPtr<IEnumVARIANT>();
         RETURN_IF_FAILED(CJsonArrayEnumerator::CreateInstance(nullptr, &enumerator));
@@ -172,16 +172,16 @@ public:
     auto get_Count(LONG *const result) -> HRESULT override
     {
         auto lock = scoped_lock(this->GetObjectMutex());
-        RETURN_HR_IF_NULL(E_INVALIDARG, result);
+        RETURN_HR_IF_NULL(E_POINTER, result);
 
         try
         {
             *result = gsl::narrow<LONG>(this->items.size());
             return S_OK;
         }
-        catch (const gsl::narrowing_error &)
+        catch (const gsl::narrowing_error &ex)
         {
-            RETURN_HR(E_UNEXPECTED);
+            RETURN_HR_MSG(E_UNEXPECTED, "%hs", ex.what());
         }
     }
 };

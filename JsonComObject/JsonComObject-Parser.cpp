@@ -280,8 +280,8 @@ private:
 public:
     auto ParseJson(const BSTR json_str, VARIANT *const result) noexcept -> HRESULT override
     {
-        RETURN_HR_IF_NULL(E_INVALIDARG, result);
-        RETURN_HR_IF_NULL(E_INVALIDARG, json_str);
+        RETURN_HR_IF_NULL(E_POINTER, result);
+        RETURN_HR_IF_NULL(E_POINTER, json_str);
 
         try
         {

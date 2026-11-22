@@ -73,10 +73,10 @@ BOOST_FIXTURE_TEST_CASE(ParseJsonTest, ParserTestFixture)
     BOOST_TEST_REQUIRE(!FAILED(parser.CoCreateInstance(CLSID_JsonParser, nullptr)));
     ATLASSERT(parser != nullptr);
 
-    BOOST_TEST(parser->ParseJson(CComBSTR(), nullptr) == E_INVALIDARG);
+    BOOST_TEST(parser->ParseJson(CComBSTR(), nullptr) == E_POINTER);
 
     auto var1 = CComVariant();
-    BOOST_TEST(parser->ParseJson(CComBSTR(), &var1) == E_INVALIDARG);
+    BOOST_TEST(parser->ParseJson(CComBSTR(), &var1) == E_POINTER);
 
     auto var_null = CComVariant();
     BOOST_TEST_REQUIRE(!FAILED(parser->ParseJson(CComBSTR(OLESTR("null")), &var_null)));
