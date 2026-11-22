@@ -20,7 +20,7 @@ A small Windows COM/ATL in-process server that parses JSON and exposes the resul
 
 Arrays support indexed item access, a count, nested arrays, and `IEnumVARIANT` enumeration. Parser and array COM objects expose `IAgileObject`, `IDispatch`, and `ISupportErrorInfo`.
 
-JSON objects and the `IJsonObject` implementation are not available yet, although the `IJsonObject` contract is already declared in the type library. Parsing failures are reported as COM errors; malformed JSON produces `DISP_E_EXCEPTION` with error information.
+JSON syntax errors reported by `jsoncons` are returned as `DISP_E_EXCEPTION` with error information; other unsupported or internal failures return their corresponding COM HRESULT.
 
 The public COM contracts are defined in `JsonComObject/JsonComObject.idl`. The DLL is implemented with C++23 modules and ATL, and parser functionality uses `jsoncons`.
 
