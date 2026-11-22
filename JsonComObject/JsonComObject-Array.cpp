@@ -109,7 +109,7 @@ public:
 protected:
     virtual ~CJsonArray() noexcept = default;
 
-
+public:
     constexpr auto &GetObjectMutex() & noexcept
     {
         return this->object_mutex;
