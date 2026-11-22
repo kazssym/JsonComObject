@@ -145,7 +145,15 @@ BOOST_FIXTURE_TEST_CASE(ParseJsonArrayTest, ParserTestFixture)
     BOOST_TEST(count1 == 3);
 
     auto item1 = CComVariant();
-    BOOST_TEST(!FAILED(json_array1->get_Item(0, &item1)));
+    BOOST_TEST(!FAILED(json_array1->get_Item(2, &item1)));
+    THROW_IF_FAILED(item1.ChangeType(VT_I8));
+    BOOST_TEST(V_VT(&item1) == VT_I8);
+    BOOST_TEST(V_I8(&item1) == 3);
+    item1.Clear();
+
+    auto enumerator1 = CComPtr<IEnumVARIANT>();
+    BOOST_TEST(!FAILED(json_array1->get__NewEnum(&enumerator1)));
+    BOOST_TEST(!FAILED(enumerator1->Next(1, &item1, nullptr)));
     THROW_IF_FAILED(item1.ChangeType(VT_I8));
     BOOST_TEST(V_VT(&item1) == VT_I8);
     BOOST_TEST(V_I8(&item1) == 1);
