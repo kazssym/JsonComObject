@@ -182,7 +182,7 @@ public:
         }
         catch (const gsl::narrowing_error &)
         {
-            RETURN_HR(DISP_E_OVERFLOW);
+            RETURN_HR(E_UNEXPECTED);
         }
     }
 };
