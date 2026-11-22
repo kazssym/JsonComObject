@@ -33,6 +33,7 @@ module;
 #include <atlcomcli.h>
 #include <atldef.h>
 #include <gsl/narrow>
+#include <mutex>
 #include <strsafe.h>
 #include <utility>
 #include <vector>
@@ -48,6 +49,8 @@ using ATL::IEnumOnSTLImpl;
 using ATL::ISupportErrorInfoImpl;
 using ATL::_Copy;
 using std::move;
+using std::mutex;
+using std::scoped_lock;
 using std::size_t;
 using std::vector;
 
@@ -106,6 +109,16 @@ public:
 protected:
     virtual ~CJsonArray() noexcept = default;
 
+
+    constexpr auto &GetObjectMutex() & noexcept
+    {
+        return this->object_mutex;
+    }
+
+private:
+    mutex object_mutex;
+
+
 public:
     constexpr auto &GetItems() const & noexcept
     {
@@ -114,6 +127,7 @@ public:
 
     constexpr void SetItems(vector<CComVariant> new_items) noexcept
     {
+        auto lock = scoped_lock(this->GetObjectMutex());
         this->items = move(new_items);
     }
 
@@ -133,6 +147,7 @@ public:
         RETURN_HR_IF(E_INVALIDARG, !(pos >= 0 && static_cast<size_t>(pos) < this->items.size()));
         RETURN_HR_IF_NULL(E_INVALIDARG, result);
 
+        auto lock = scoped_lock(this->GetObjectMutex());
         ::VariantInit(result);
         RETURN_IF_FAILED(::VariantCopy(result, &this->GetItems()[pos]));
         return S_OK;
@@ -147,6 +162,8 @@ public:
 
         const auto &com_enumerator = dynamic_cast<CJsonArrayEnumerator *>(static_cast<IEnumVARIANT *>(enumerator));
         RETURN_HR_IF_NULL(E_UNEXPECTED, com_enumerator);
+
+        auto lock = scoped_lock(this->GetObjectMutex());
         RETURN_IF_FAILED(com_enumerator->Init(this->GetUnknown(), this->GetMutableItems()));
 
         *result = enumerator.Detach();
@@ -159,6 +176,7 @@ public:
 
         try
         {
+            auto lock = scoped_lock(this->GetObjectMutex());
             *result = gsl::narrow<LONG>(this->items.size());
             return S_OK;
         }
