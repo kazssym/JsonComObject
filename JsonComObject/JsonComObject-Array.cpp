@@ -1,4 +1,4 @@
-// JsonComObject-Parser.cpp -
+// JsonComObject-Array.cpp -
 // Copyright © 2026 Kaz Nishimura
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
