@@ -44,8 +44,10 @@ module;
 #include <jsoncons/staj_event.hpp>
 #include <jsoncons/utility/byte_string.hpp>
 #include <mutex>
+#include <string>
 #include <string_view>
 #include <strsafe.h>
+#include <unordered_map>
 #include <utility>
 #include <vector>
 #include <wil/result_macros.h>
@@ -61,11 +63,16 @@ using jsoncons::staj_events;
 using jsoncons::wjson;
 using jsoncons::wjson_string_cursor;
 using std::bad_alloc;
+using std::equal_to;
 using std::exception;
+using std::hash;
 using std::int64_t;
 using std::move;
 using std::mutex;
 using std::scoped_lock;
+using std::size_t;
+using std::unordered_map;
+using std::wstring;
 using std::wstring_view;
 using std::uint64_t;
 using std::vector;
@@ -116,6 +123,7 @@ protected:
         switch (const auto &cur = cursor.current(); cur.event_type())
         {
         case string_value:
+        case key:
             return this->ParseStringValue(cursor);
 #if 0 // byte_string not supported in this implementation
         case byte_string_value: {
@@ -135,6 +143,8 @@ protected:
             return this->ParseUint64Value(cursor);
         case double_value:
             return this->ParseDoubleValue(cursor);
+        case begin_object:
+            return this->ParseObject(cursor);
         case begin_array:
             return this->ParseArray(cursor);
         default:
@@ -156,7 +166,7 @@ private:
 
         using enum staj_events;
         const auto &cur = cursor.current();
-        THROW_HR_IF(E_UNEXPECTED, cur.event_type() != string_value);
+        THROW_HR_IF(E_UNEXPECTED, cur.event_type() != string_value && cur.event_type() != key);
 
         const auto sv = cur.get<wstring_view>();
         const auto bstr = CComBSTR(gsl::narrow<int>(sv.size()), sv.data());
@@ -246,6 +256,36 @@ private:
         const auto n = cur.get<double>();
         cursor.next();
         return CComVariant(n);
+    }
+
+    auto ParseObject(wjson_string_cursor &cursor) const -> CComVariant
+    {
+        THROW_HR_IF(E_UNEXPECTED, cursor.done());
+
+        using enum staj_events;
+        THROW_HR_IF(E_UNEXPECTED, cursor.current().event_type() != begin_object);
+
+        cursor.next();
+        THROW_HR_IF(E_FAIL, cursor.done());
+
+        auto keys = vector<CComBSTR>();
+        auto values = unordered_map<wstring, CComVariant, hash<wstring_view>, equal_to<>>();
+        while (cursor.current().event_type() != end_object)
+        {
+            auto key = this->ParseJsonValue(cursor);
+            THROW_IF_FAILED(key.ChangeType(VT_BSTR));
+            THROW_HR_IF(E_UNEXPECTED, V_VT(&key) != VT_BSTR);
+            keys.push_back(CComBSTR(gsl::narrow<int>(::SysStringLen(V_BSTR(&key))), V_BSTR(&key)));
+
+            auto key_str = wstring(V_BSTR(&key), ::SysStringLen(V_BSTR(&key)));
+            auto [iter, inserted] = values.try_emplace(move(key_str), this->ParseJsonValue(cursor));
+            THROW_HR_IF(DISP_E_BADINDEX, !inserted);
+        }
+        cursor.next();
+
+        // TODO: Implement a COM object that implements IJsonObject and populate it with the parsed keys and values.
+
+        return CComVariant(); // Placeholder return value
     }
 
     auto ParseArray(wjson_string_cursor &cursor) const -> CComVariant
