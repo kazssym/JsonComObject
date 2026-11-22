@@ -47,6 +47,7 @@ module;
 #include <string_view>
 #include <strsafe.h>
 #include <utility>
+#include <vector>
 #include <wil/result_macros.h>
 
 using ATL::CA2W;
@@ -59,16 +60,19 @@ using jsoncons::json_exception;
 using jsoncons::staj_events;
 using jsoncons::wjson;
 using jsoncons::wjson_string_cursor;
-using std::exception;
+using std::bad_alloc;
 using std::int64_t;
 using std::move;
 using std::mutex;
 using std::scoped_lock;
 using std::wstring_view;
 using std::uint64_t;
+using std::vector;
 
 
 export module JsonComObject:Parser;
+
+import :Array;
 
 namespace JsonComObject
 {
@@ -93,12 +97,13 @@ export class ATL_NO_VTABLE CJsonParser
     DECLARE_OBJECT_DESCRIPTION("JSON Parser Object 1.0")
     DECLARE_REGISTRY_RESOURCEID(IDR_JSONPARSER)
 
-  public:
+public:
     CJsonParser() = default;
 
+protected:
     virtual ~CJsonParser() noexcept = default;
 
-protected:
+
     auto ParseJsonValue(wjson_string_cursor &cursor) const -> CComVariant
     {
         if (cursor.done())
@@ -109,14 +114,10 @@ protected:
         using enum staj_events;
         switch (const auto &cur = cursor.current(); cur.event_type())
         {
-        case string_value: {
-            const auto sv = cur.get<wstring_view>();
-            const auto bstr = CComBSTR(gsl::narrow<int>(sv.size()), sv.data());
-            cursor.next();
-            return bstr;
-        }
+        case string_value:
+            return this->ParseStringValue(cursor);
 #if 0 // byte_string not supported in this implementation
-		case byte_string_value: {
+        case byte_string_value: {
             const auto sv = cur.get<byte_string_view>();
             const auto bstr = CComBSTR(gsl::narrow<int>(sv.size()), reinterpret_cast<LPCSTR>(sv.data()));
             cursor.next();
@@ -133,12 +134,35 @@ protected:
             return this->ParseUint64Value(cursor);
         case double_value:
             return this->ParseDoubleValue(cursor);
+        case begin_array:
+            return this->ParseArray(cursor);
         default:
             THROW_HR_MSG(E_NOTIMPL, "Not implemented yet.");
         }
     }
 
 private:
+    /// @brief Parses the current JSON token as a string and returns the parsed value as a variant.
+    ///
+    /// @param[in,out] cursor A JSON cursor positioned at the current token; it must not be at the end and must
+    /// reference a string value.
+    /// @return A CComVariant containing the parsed value of VT_BSTR type.
+    /// @throws wil::ResultException(E_UNEXPECTED) if the cursor is at the end or the current token is not a string
+    /// value.
+    auto ParseStringValue(wjson_string_cursor &cursor) const -> CComVariant
+    {
+        THROW_HR_IF(E_UNEXPECTED, cursor.done());
+
+        using enum staj_events;
+        const auto &cur = cursor.current();
+        THROW_HR_IF(E_UNEXPECTED, cur.event_type() != string_value);
+
+        const auto sv = cur.get<wstring_view>();
+        const auto bstr = CComBSTR(gsl::narrow<int>(sv.size()), sv.data());
+        cursor.next();
+        return CComVariant(bstr);
+    }
+
     auto ParseNullValue(wjson_string_cursor &cursor) const -> CComVariant
     {
         THROW_HR_IF(E_UNEXPECTED, cursor.done());
@@ -148,7 +172,7 @@ private:
         THROW_HR_IF(E_UNEXPECTED, cur.event_type() != null_value);
 
         cursor.next();
-        return VARIANT{VT_NULL};
+        return CComVariant(VARIANT{VT_NULL});
     }
 
     auto ParseBoolValue(wjson_string_cursor &cursor) const -> CComVariant
@@ -161,7 +185,7 @@ private:
 
         const auto b = cur.get<bool>();
         cursor.next();
-        return b;
+        return CComVariant(b);
     }
 
     /// @brief Parses the current JSON token as a signed 64-bit integer and returns the parsed value as a variant.
@@ -180,7 +204,7 @@ private:
 
         const auto n = cur.get<int64_t>();
         cursor.next();
-        return n;
+        return CComVariant(n);
     }
 
     /// @brief Parses the current JSON token as an unsigned 64-bit integer and returns the parsed value as a variant.
@@ -200,7 +224,7 @@ private:
 
         const auto n = cur.get<uint64_t>();
         cursor.next();
-        return n;
+        return CComVariant(n);
     }
 
     /// @brief Parses the current JSON token as a double and returns the parsed value as a variant.
@@ -220,26 +244,37 @@ private:
 
         const auto n = cur.get<double>();
         cursor.next();
-        return n;
+        return CComVariant(n);
     }
 
-
-protected:
-    constexpr auto &GetRootJsonValue() const noexcept
+    auto ParseArray(wjson_string_cursor &cursor) const -> CComVariant
     {
-        return this->root_json_value;
+        THROW_HR_IF(E_UNEXPECTED, cursor.done());
+
+        using enum staj_events;
+        THROW_HR_IF(E_UNEXPECTED, cursor.current().event_type() != begin_array);
+
+        cursor.next();
+        THROW_HR_IF(E_FAIL, cursor.done());
+
+        auto items =vector<CComVariant>();
+        while (cursor.current().event_type() != end_array)
+        {
+            items.push_back(this->ParseJsonValue(cursor));
+            THROW_HR_IF(E_FAIL, cursor.done());
+        }
+        cursor.next();
+
+        auto array = CComPtr<IJsonArray>();
+        THROW_IF_FAILED(CJsonArray::CreateInstance(nullptr, &array));
+
+        const auto &com_array = dynamic_cast<CJsonArray *>(static_cast<IJsonArray *>(array));
+        THROW_HR_IF_NULL(E_UNEXPECTED, com_array);
+        com_array->SetItems(move(items));
+
+        return CComVariant(array);
     }
 
-    void SetRootJsonValue(CComVariant json_value)
-    {
-        auto v = VARIANT{};
-        THROW_IF_FAILED(json_value.Detach(&v));
-        THROW_IF_FAILED(this->root_json_value.Attach(&v));
-    }
-
-private:
-    CComVariant root_json_value;
-    mutex root_json_value_mutex;
 
 public:
     auto ParseJson(const BSTR json_str, VARIANT *const result) noexcept -> HRESULT override
@@ -247,15 +282,13 @@ public:
         RETURN_HR_IF_NULL(E_INVALIDARG, result);
         RETURN_HR_IF_NULL(E_INVALIDARG, json_str);
 
-        auto lock = scoped_lock(this->root_json_value_mutex);
         try
         {
             auto cursor = wjson_string_cursor(json_str);
-            this->SetRootJsonValue(this->ParseJsonValue(cursor));
+            auto root_value = this->ParseJsonValue(cursor);
 
             ::VariantInit(result);
-            RETURN_IF_FAILED(::VariantCopy(result, &this->GetRootJsonValue()));
-
+            RETURN_IF_FAILED(root_value.Detach(result));
             return S_OK;
         }
         catch (const json_exception &ex)
@@ -280,13 +313,13 @@ public:
         {
             return ex.GetErrorCode();
         }
-        catch (const gsl::narrowing_error &)
+        catch (const bad_alloc &)
         {
-            RETURN_HR(DISP_E_OVERFLOW);
+            RETURN_HR(E_OUTOFMEMORY);
         }
-        catch (const exception &ex)
+        catch (...)                            
         {
-            RETURN_HR_MSG(E_UNEXPECTED, "%hs", ex.what());
+            RETURN_HR(E_UNEXPECTED);
         }
     }
 };
