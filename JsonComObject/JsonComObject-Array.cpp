@@ -84,7 +84,7 @@ export class ATL_NO_VTABLE CJsonArray
     : public CComObjectRootEx<CComMultiThreadModel>,
       public CComCoClass<CJsonArray>,
       public IDispatchImpl<IJsonArray, &IID_IJsonArray, &LIBID_JsonComObjectLib, 1, 0>,
-      public ISupportErrorInfoImpl<&IID_IJsonParser>,
+      public ISupportErrorInfoImpl<&IID_IJsonArray>,
       public IAgileObject
 {
     using Base = CComObjectRootEx<CComMultiThreadModel>;
